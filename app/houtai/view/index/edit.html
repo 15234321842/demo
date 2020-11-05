@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">客户 - 编辑</h1>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit" method="post" action="{:url('edit_save')}">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">客户名称：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="customer_name" class="weui-input" placeholder="请输入名称" maxlength="100" value="{$model.customer_name}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">手机号1：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="mobile[]" class="weui-input" placeholder="请输入手机号" maxlength="100" value="{$model.mobile.0}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">手机号2：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="mobile[]" class="weui-input" placeholder="请输入手机号" maxlength="100" value="{$model.mobile.1}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">手机号3：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="mobile[]" class="weui-input" placeholder="请输入手机号" maxlength="100" value="{$model.mobile.2}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">性别：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox">
+                        {volist name="sexList" id="vo"}
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <input type="radio" name="sex" class="weui-check" value="{$key}" {if condition="$key eq $model.sex"}checked="true"{/if}/>
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{$vo}</p></div>
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">身高cm：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="stature" class="weui-input" placeholder="请输入身高" maxlength="20" value="{$model.stature}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">体重kg：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="weight" class="weui-input" placeholder="请输入体重" maxlength="20" value="{$model.weight}" />
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_select letu-cell_select">
+                    <div class="weui-cell__hd"><label class="weui-label">体型：</label></div>
+                    <div class="weui-cell__bd">
+                        <select name="somatotype" class="weui-select">
+                        {volist name="somatotypeList" id="vo"}
+                        <option value="{$key}" {if condition="$key eq $model.somatotype"}selected{/if}>{$vo}</option>
+                        {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_select letu-cell_select">
+                    <div class="weui-cell__hd"><label class="weui-label">婚姻状况：</label></div>
+                    <div class="weui-cell__bd">
+                        <select name="marital_status" class="weui-select">
+                            {volist name="maritalStatusList" id="vo"}
+                            <option value="{$key}" {if condition="$key eq $model.marital_status"}selected{/if}>{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">出生日期：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" id="birthdate" name="birthdate" class="weui-input"
+                               placeholder="选择日期" maxlength="20" value="{$model.birthdate}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">客户关系：</div>
+                            <div class="letu-box-body weui-cells_checkbox">
+                                {volist name="customerRelationsList" id="vo"}
+                                <label class="letu-radio-inline weui-check__label">
+                                    <div class="weui-cell__hd">
+                                        <input type="radio" name="customer_relations" class="weui-check" value="{$key}" {if condition="$key eq $model.customer_relations"}checked="true"{/if}/>
+                                        <i class="weui-icon-checked"></i>
+                                    </div>
+                                    <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                </label>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">客户分类：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox">
+                        {volist name="customerClassList" id="vo"}
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <input type="radio" name="customer_class" class="weui-check" value="{$key}" {if condition="$key eq $model.customer_class"}checked="true"{/if}/>
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{$vo}</p></div>
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_access sel-industry">
+                    <div class="weui-cell__hd"><label class="weui-label">所在行业：</label></div>
+                    <div class="weui-cell__bd">
+                        <span id="industry_id_text">{$model.industry_name}</span>
+                        <input type="hidden" id="industry_id" name="industry_id" value="{$model.industry_id}" />
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </div>
+                <div class="weui-cell weui-cell_access sel-position">
+                    <div class="weui-cell__hd"><label class="weui-label">职位：</label></div>
+                    <div class="weui-cell__bd">
+                        <span id="position_id_text">{$model.position_name}</span>
+                        <input type="hidden" id="position_id" name="position_id" value="{$model.position_id}" />
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </div>
+                <div class="weui-cell weui-cell_access sel-post">
+                    <div class="weui-cell__hd"><label class="weui-label">岗位：</label></div>
+                    <div class="weui-cell__bd">
+                        <span id="post_id_text">{$model.post_name}</span>
+                        <input type="hidden" id="post_id" name="post_id" value="{$model.post_id}" />
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </div>
+                <div class="weui-cell weui-cell_select letu-cell_select">
+                    <div class="weui-cell__hd"><label class="weui-label">学历：</label></div>
+                    <div class="weui-cell__bd">
+                        <select name="education_id" class="weui-select">
+                            {volist name="educationIdList" id="vo"}
+                            <option value="{$key}" {if condition="$key eq $model.education_id"}selected{/if}>{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_access sel-specialty">
+                    <div class="weui-cell__hd"><label class="weui-label">专业：</label></div>
+                    <div class="weui-cell__bd">
+                        <span id="specialty_id_text">{$model.specialty_name}</span>
+                        <input type="hidden" id="specialty_id" name="specialty_id" value="{$model.specialty_id}" />
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </div>
+                <div class="weui-cell weui-cell_access sel-school">
+                    <div class="weui-cell__hd"><label class="weui-label">毕业学校：</label></div>
+                    <div class="weui-cell__bd">
+                        <span id="school_id_text">{$model.school_name}</span>
+                        <input type="hidden" id="school_id" name="school_id" value="{$model.school_id}" />
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </div>
+                <div class="weui-cell weui-cell_access sel-birth-area">
+                    <div class="weui-cell__hd"><label class="weui-label">出生地区：</label></div>
+                    <div class="weui-cell__bd">
+                        <span id="birth_area_text">{$model.birth_province_name} {$model.birth_city_name} {$model.birth_region_name}</span>
+                        <input type="hidden" id="birth_province_id" name="birth_province_id" value="{$model.birth_province_id}" />
+                        <input type="hidden" id="birth_city_id" name="birth_city_id" value="{$model.birth_city_id}" />
+                        <input type="hidden" id="birth_region_id" name="birth_region_id" value="{$model.birth_region_id}" />
+                        <input type="hidden" id="birth_province_name" name="birth_province_name" value="{$model.birth_province_name}" />
+                        <input type="hidden" id="birth_city_name" name="birth_city_name" value="{$model.birth_city_name}" />
+                        <input type="hidden" id="birth_region_name" name="birth_region_name" value="{$model.birth_region_name}" />
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">出生住址：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="birth_address" class="weui-input" placeholder="请输入出生住址" maxlength="200" value="{$model.birth_address}" />
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_access sel-reside-area">
+                    <div class="weui-cell__hd"><label class="weui-label">现居地区：</label></div>
+                    <div class="weui-cell__bd">
+                        <span id="reside_area_text">{$model.reside_province_name} {$model.reside_city_name} {$model.reside_region_name}</span>
+                        <input type="hidden" id="reside_province_id" name="reside_province_id" value="{$model.reside_province_id}" />
+                        <input type="hidden" id="reside_city_id" name="reside_city_id" value="{$model.reside_city_id}" />
+                        <input type="hidden" id="reside_region_id" name="reside_region_id" value="{$model.reside_region_id}" />
+                        <input type="hidden" id="reside_province_name" name="reside_province_name" value="{$model.reside_province_name}" />
+                        <input type="hidden" id="reside_city_name" name="reside_city_name" value="{$model.reside_city_name}" />
+                        <input type="hidden" id="reside_region_name" name="reside_region_name" value="{$model.reside_region_name}" />
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">现居住址：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="reside_address" class="weui-input" placeholder="请输入现居住址" maxlength="200" value="{$model.reside_address}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">企业名称：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="company_name" class="weui-input" placeholder="请输入企业名称" maxlength="200" value="{$model.company_name}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">办公地址：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="office_address" class="weui-input" placeholder="请输入办公地址" maxlength="200" value="{$model.office_address}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">办公电话：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="office_phone" class="weui-input" placeholder="请输入办公电话" maxlength="50" value="{$model.office_phone}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">传真号码：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="fax" class="weui-input" placeholder="请输入传真号码" maxlength="50" value="{$model.fax}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">企业网址：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="company_site" class="weui-input" placeholder="请输入企业网址" maxlength="200" value="{$model.company_site}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">个人网址：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="person_site" class="weui-input" placeholder="请输入个人网址" maxlength="200" value="{$model.person_site}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">企业邮箱：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="company_email" class="weui-input" placeholder="请输入企业邮箱" maxlength="200" value="{$model.company_email}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">个人邮箱：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="person_email" class="weui-input" placeholder="请输入个人邮箱" maxlength="200" value="{$model.person_email}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">兴趣爱好：</div>
+                            <div class="letu-box-body weui-cells_checkbox">
+                                {volist name="hobbiesIdsList" id="vo"}
+                                <label class="letu-radio-inline weui-check__label">
+                                    <div class="weui-cell__hd">
+                                        <input type="checkbox" name="hobbies_ids[]" class="weui-check" value="{$key}" {if condition="in_array($key,$model.hobbies_ids)"}checked{/if} />
+                                        <i class="weui-icon-checked"></i>
+                                    </div>
+                                    <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                </label>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">客户详情：</div>
+                            <div class="letu-box-body">
+                                <textarea name="customer_detail" class="weui-textarea" placeholder="请输入客户详情" rows="5">{$model.customer_detail}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="submit" class="weui-btn weui-btn_warn">确定保存</button>
+            </div>
+            <input type="hidden" name="customer_id" value="{:think_encrypt($model.customer_id)}" />
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script src="/static/houtai/js/plugins/letu/letu-picker.js"></script>
+<script src="/static/houtai/js/plugins/letu/letu-picker-linkage.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#birthdate").calendar({'dateFormat': 'yyyy-mm-dd'});
+
+        $(".sel-industry").letuPicker({
+            tabTitleLeft:'行业选择',
+            tabTitleRight:'行业添加',
+            tabFormRight:[
+                {fieldName:'industry_name',fieldText:'行业名称'},
+                {fieldName:'name_first_letter',fieldText:'名称首字母'}
+            ],
+            tabFormLeftKeyName:'industry_id',
+            tabFormLeftValueName:'industry_name',
+            tabFormLeftUrl:"{:url('Plugin/industry_list')}",
+            tabFormRightUrl:"{:url('Plugin/industry_add')}",
+            tabSelectCallback:function(key,value){
+                $("#industry_id_text").html(value);
+                $("#industry_id").val(key);
+            }
+        });
+
+        $(".sel-position").letuPicker({
+            tabTitleLeft:'职位选择',
+            tabTitleRight:'职位添加',
+            tabFormRight:[
+                {fieldName:'position_name',fieldText:'职位名称'},
+                {fieldName:'name_first_letter',fieldText:'名称首字母'}
+            ],
+            tabFormLeftKeyName:'position_id',
+            tabFormLeftValueName:'position_name',
+            tabFormLeftUrl:"{:url('Plugin/position_list')}",
+            tabFormRightUrl:"{:url('Plugin/position_add')}",
+            tabSelectCallback:function(key,value){
+                $("#position_id_text").html(value);
+                $("#position_id").val(key);
+            }
+        });
+
+        $(".sel-post").letuPicker({
+            tabTitleLeft:'岗位选择',
+            tabTitleRight:'岗位添加',
+            tabFormRight:[
+                {fieldName:'post_name',fieldText:'岗位名称'},
+                {fieldName:'name_first_letter',fieldText:'名称首字母'}
+            ],
+            tabFormLeftKeyName:'post_id',
+            tabFormLeftValueName:'post_name',
+            tabFormLeftUrl:"{:url('Plugin/post_list')}",
+            tabFormRightUrl:"{:url('Plugin/post_add')}",
+            tabSelectCallback:function(key,value){
+                $("#post_id_text").html(value);
+                $("#post_id").val(key);
+            }
+        });
+
+        $(".sel-specialty").letuPicker({
+            tabTitleLeft:'专业选择',
+            tabTitleRight:'专业添加',
+            tabFormRight:[
+                {fieldName:'specialty_name',fieldText:'专业名称'},
+                {fieldName:'name_first_letter',fieldText:'名称首字母'}
+            ],
+            tabFormLeftKeyName:'specialty_id',
+            tabFormLeftValueName:'specialty_name',
+            tabFormLeftUrl:"{:url('Plugin/specialty_list')}",
+            tabFormRightUrl:"{:url('Plugin/specialty_add')}",
+            tabSelectCallback:function(key,value){
+                $("#specialty_id_text").html(value);
+                $("#specialty_id").val(key);
+            }
+        });
+
+        $(".sel-school").letuPicker({
+            tabTitleLeft:'学校选择',
+            tabTitleRight:'学校添加',
+            tabFormRight:[
+                {fieldName:'school_name',fieldText:'学校名称'},
+                {fieldName:'name_first_letter',fieldText:'名称首字母'}
+            ],
+            tabFormLeftKeyName:'school_id',
+            tabFormLeftValueName:'school_name',
+            tabFormLeftUrl:"{:url('Plugin/school_list')}",
+            tabFormRightUrl:"{:url('Plugin/school_add')}",
+            tabSelectCallback:function(key,value){
+                $("#school_id_text").html(value);
+                $("#school_id").val(key);
+            }
+        });
+
+        $(".sel-birth-area").letuPickerLinkage({
+            title:'出生地区选择',
+            tabs:['省份选择','城市选择','区/乡镇选择'],
+            url:"{:url('Plugin/city_list')}",
+            pid:0,
+            mapKeyName:'pcity_id',
+            mapValueName:'pcity_name',
+            mapParentIdName:'parent_id',
+            selectCallback:function(items){
+                var birth_area_text = $("#birth_area_text");
+                birth_area_text.empty();
+                for(var i=0;i<items.length;i++){
+                    if(i == 0){
+                        birth_area_text.html(items[i].itemValue);
+                    }else{
+                        birth_area_text.html(birth_area_text.html() + " " + items[i].itemValue);
+                    }
+                }
+
+                var birth_province_id = $("#birth_province_id");
+                birth_province_id.val("");
+                var birth_province_name = $("#birth_province_name");
+                birth_province_name.val("");
+
+                var birth_city_id = $("#birth_city_id");
+                birth_city_id.val("");
+                var birth_city_name = $("#birth_city_name");
+                birth_city_name.val("");
+
+                var birth_region_id = $("#birth_region_id");
+                birth_region_id.val("");
+                var birth_region_name = $("#birth_region_name");
+                birth_region_name.val("");
+
+                if(items.length > 0){
+                    birth_province_id.val(items[0].itemId);
+                    birth_province_name.val(items[0].itemValue);
+                }
+                if(items.length > 1){
+                    birth_city_id.val(items[1].itemId);
+                    birth_city_name.val(items[1].itemValue);
+                }
+                if(items.length > 2){
+                    birth_region_id.val(items[2].itemId);
+                    birth_region_name.val(items[2].itemValue);
+                }
+            }
+        });
+
+        $(".sel-reside-area").letuPickerLinkage({
+            title:'现居地区选择',
+            tabs:['省份选择','城市选择','区/乡镇选择'],
+            url:"{:url('Plugin/city_list')}",
+            pid:0,
+            mapKeyName:'pcity_id',
+            mapValueName:'pcity_name',
+            mapParentIdName:'parent_id',
+            selectCallback:function(items){
+                var reside_area_text = $("#reside_area_text");
+                reside_area_text.empty();
+                for(var i=0;i<items.length;i++){
+                    if(i == 0){
+                        reside_area_text.html(items[i].itemValue);
+                    }else{
+                        reside_area_text.html(reside_area_text.html() + " " + items[i].itemValue);
+                    }
+                }
+                var reside_province_id = $("#reside_province_id");
+                reside_province_id.val("");
+                var reside_province_name = $("#reside_province_name");
+                reside_province_name.val("");
+
+                var reside_city_id = $("#reside_city_id");
+                reside_city_id.val("");
+                var reside_city_name = $("#reside_city_name");
+                reside_city_name.val("");
+
+                var reside_region_id = $("#reside_region_id");
+                reside_region_id.val("");
+                var reside_region_name = $("#reside_region_name");
+                reside_region_name.val("");
+
+                if(items.length > 0){
+                    reside_province_id.val(items[0].itemId);
+                    reside_province_name.val(items[0].itemValue);
+                }
+                if(items.length > 1){
+                    reside_city_id.val(items[1].itemId);
+                    reside_city_name.val(items[1].itemValue);
+                }
+                if(items.length > 2){
+                    reside_region_id.val(items[2].itemId);
+                    reside_region_name.val(items[2].itemValue);
+                }
+            }
+        });
+
+        $("#frmSubmit").ajaxForm({
+            dataType:'json',
+            success:function(data){
+                if(data.success){
+                    $.toptip(data.msg, 'success');
+                }else{
+                    $.toptip(data.msg, 'error');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

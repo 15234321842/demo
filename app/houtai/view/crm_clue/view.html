@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+    <div class="weui-tab">
+        <div class="weui-tab__bd">
+            <div class="page-group">
+                <header class="bar bar-nav">
+                    <a class="button button-link button-nav pull-left" onclick="goBack('');"><span class="icon fa fa-angle-left"></span>返回</a>
+                    <h1 class="title">客户线索 - 详情</h1>
+                    <a class="button button-link button-nav pull-right" href="{:letu_url('edit',array('id'=>think_encrypt($model['clue_id'])))}"><span class="icon fa fa-edit"></span></a>
+                </header>
+                <div class="content crm_clue">
+                    <div id="list" class="weui-cells_notbefore letu-customer">
+                        <div class="weui-cell weui-cell_access">
+                            <div class="weui-cell__bd">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item_2 user"><span class="weui-badge {if condition='$model.regular_customer eq 1'}badge-old{/if}">{:config('app.regular_customer.'.$model['regular_customer'])}</span>{$model.customer_name}</div>
+                                    <div class="weui-flex__item phone"><a href="tel:{$model['mobile'][0]}">{$model['mobile'][0]}</a></div>
+                                    <div class="weui-flex__item weui-cell__ft relations"><a href="{:letu_url('view',array('id'=>think_encrypt($model['customer_id'])))}">{:config('app.customer_relations.'.$model['customer_relations'])}</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <p class="clue_content">{$model.clue_content}</p>
+                                <p class="clue_time">
+                                    <span>{$model.clue_time|date='Y-m-d'}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-btn-area letu-btn-area">
+                        <button type="button" id="btnLoadMore" class="weui-btn weui-btn_primary" data-url="{:letu_url('load_other',array('id'=>think_encrypt($model['clue_id'])))}">加载更多线索</button>
+                        <button type="button" id="btnDel" class="weui-btn weui-btn_warn" data-href="{:url('del')}" data-id="{:think_encrypt($model.clue_id)}">删除客户线索</button>
+                    </div>
+            </div>
+        </div>
+        </div>
+    </div>
+{include file="common:common_js" /}
+<script type="text/template7" id="listTemplate">
+    {{#each data}}
+    <div class="weui-cell">
+        <div class="weui-cell__bd">
+            <p class="clue_content">{{clue_content}}</p>
+            <p class="clue_time">
+                <span>{{clue_time_format}}</span>
+            </p>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        //点击加载
+        $("#btnLoadMore").click(function(){
+            var $this = $(this);
+            $.ajax({
+                type:'POST',
+                dataType:"json",
+                url:$this.attr("data-url"),
+                success:function(result){
+                    if(result.data.length > 0){
+                        var template = $("#listTemplate").html();
+                        var compiledTemplate = $.Template7.compile(template);
+                        var html = compiledTemplate(result);
+
+                        $("#list").append(html);
+                        $this.hide();
+                    }else{
+                        $.toptip(result.msg, 'error');
+                    }
+                }
+            });
+        });
+
+        $(document).on("click", "#btnDel", function() {
+            var $element = $(this);
+            var data = {};
+            data.id = $element.attr('data-id');
+
+            $.confirm("您确定要删除客户线索？", "确认删除?", function() {
+                $.ajax({
+                    type:'post',
+                    url:$element.attr("data-href"),
+                    data:data,
+                    dataType:'json',
+                    success:function(response){
+                        if(response.success){
+                            if(response.url != ""){
+                                setTimeout(function(){
+                                    window.location.href = response.url;
+                                },2000);
+                            }
+                            $.toptip(response.msg, 'success');
+                        }else{
+                            $.toptip(response.msg, 'error');
+                        }
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                    }
+                });
+            }, function() {
+                //取消操作
+            });
+
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

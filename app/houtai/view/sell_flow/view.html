@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+    <div class="weui-tab">
+        <div class="weui-tab__bd">
+            <div class="page-group">
+                <header class="bar bar-nav">
+                    <a class="button button-link button-nav pull-left" onclick="goBack('{:url('index')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+                    <h1 class="title">销售流程</h1>
+                </header>
+                <div class="content">
+                    <div id="list" class="weui-cells_notbefore letu-customer">
+                        <div class="weui-cell weui-cell_access">
+                            <div class="weui-cell__bd">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item_2 user"><span class="weui-badge {if condition='$model.regular_customer eq 1'}badge-old{/if}">{:config('app.regular_customer.'.$model['regular_customer'])}</span>{$model.customer_name}</div>
+                                    <div class="weui-flex__item phone"><a href="tel:{$model['mobile'][0]}">{$model['mobile'][0]}</a></div>
+                                    <div class="weui-flex__item weui-cell__ft relations"><a data-href="{:letu_url('view',array('id'=>$model['encrypt_id']))}">{:config('app.customer_relations.'.$model['customer_relations'])}</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">七步签单秘籍：</div>
+                                    <div class="letu-box-body weui-cells_checkbox">
+                                        <div class="weui-flex sell_flow" style="margin-top: 10px;">
+                                            <div class="weui-flex__item_3">
+                                                <span class="flow_no">1.</span>
+                                                <span class="flow_title">亲和信任</span>
+                                            </div>
+                                            <div class="weui-flex__item">
+                                                <label class="letu-radio-inline weui-check__label">
+                                                    <div class="weui-cell__hd">
+                                                        <input type="checkbox" name="sandler_trust" class="weui-check ajax_set_status" data-id="{$model.encrypt_id}" value="{$model.sandler_trust}" {if condition="$model.sandler_trust eq 1"}checked{/if} />
+                                                        <i class="weui-icon-checked"></i>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="weui-flex sell_flow">
+                                            <div class="weui-flex__item_3">
+                                                <span class="flow_no">2.</span>
+                                                <span class="flow_title">事先约定</span>
+                                            </div>
+                                            <div class="weui-flex__item">
+                                                <label class="letu-radio-inline weui-check__label">
+                                                    <div class="weui-cell__hd">
+                                                        <input type="checkbox" name="sandler_appoint" class="weui-check ajax_set_status" data-id="{$model.encrypt_id}" value="{$model.sandler_appoint}" {if condition="$model.sandler_appoint eq 1"}checked{/if} />
+                                                        <i class="weui-icon-checked"></i>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="weui-flex sell_flow">
+                                            <div class="weui-flex__item_3">
+                                                <span class="flow_no">3.</span>
+                                                <span class="flow_title">挖掘痛点</span>
+                                            </div>
+                                            <div class="weui-flex__item">
+                                                <label class="letu-radio-inline weui-check__label">
+                                                    <div class="weui-cell__hd">
+                                                        <input type="checkbox" name="sandler_pain" class="weui-check ajax_set_status" data-id="{$model.encrypt_id}" value="{$model.sandler_pain}" {if condition="$model.sandler_pain eq 1"}checked{/if} />
+                                                        <i class="weui-icon-checked"></i>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="weui-flex sell_flow">
+                                            <div class="weui-flex__item_3">
+                                                <span class="flow_no">4.</span>
+                                                <span class="flow_title">明确预算</span>
+                                            </div>
+                                            <div class="weui-flex__item">
+                                                <label class="letu-radio-inline weui-check__label">
+                                                    <div class="weui-cell__hd">
+                                                        <input type="checkbox" name="sandler_budget" class="weui-check ajax_set_status" data-id="{$model.encrypt_id}" value="{$model.sandler_budget}" {if condition="$model.sandler_budget eq 1"}checked{/if} />
+                                                        <i class="weui-icon-checked"></i>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="weui-flex sell_flow">
+                                            <div class="weui-flex__item_3">
+                                                <span class="flow_no">5.</span>
+                                                <span class="flow_title">验证决策</span>
+                                            </div>
+                                            <div class="weui-flex__item">
+                                                <label class="letu-radio-inline weui-check__label">
+                                                    <div class="weui-cell__hd">
+                                                        <input type="checkbox" name="sandler_decision" class="weui-check ajax_set_status" data-id="{$model.encrypt_id}" value="{$model.sandler_decision}" {if condition="$model.sandler_decision eq 1"}checked{/if} />
+                                                        <i class="weui-icon-checked"></i>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="weui-flex sell_flow">
+                                            <div class="weui-flex__item_3">
+                                                <span class="flow_no">6.</span>
+                                                <span class="flow_title">方案展示</span>
+                                            </div>
+                                            <div class="weui-flex__item">
+                                                <label class="letu-radio-inline weui-check__label">
+                                                    <div class="weui-cell__hd">
+                                                        <input type="checkbox" name="sandler_scheme" class="weui-check ajax_set_status" data-id="{$model.encrypt_id}" value="{$model.sandler_scheme}" {if condition="$model.sandler_scheme eq 1"}checked{/if} />
+                                                        <i class="weui-icon-checked"></i>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="weui-flex sell_flow">
+                                            <div class="weui-flex__item_3">
+                                                <span class="flow_no">7.</span>
+                                                <span class="flow_title">反悔销售</span>
+                                            </div>
+                                            <div class="weui-flex__item">
+                                                <label class="letu-radio-inline weui-check__label">
+                                                    <div class="weui-cell__hd">
+                                                        <input type="checkbox" name="sandler_deal" class="weui-check ajax_set_status" data-id="{$model.encrypt_id}" value="{$model.sandler_deal}" {if condition="$model.sandler_deal eq 1"}checked{/if} />
+                                                        <i class="weui-icon-checked"></i>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-btn-area letu-btn-area">
+                            <a class="weui-btn weui-btn_warn" href="{:letu_url('flow_step',array('id'=>$model['encrypt_id']))}">七步签单详情</a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        </div>
+    </div>
+{include file="common:common_js" /}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("change","input.ajax_set_status",function(){
+            var $this = $(this);
+
+            var setKey = $this.attr("name");
+
+            var dataJson = {};
+            dataJson.id = $this.attr("data-id");
+
+            dataJson[setKey] = 0;
+            if($this.prop("checked")){
+                dataJson[setKey] = 1;
+            }
+
+            $.ajax({
+                type:'post',
+                url:"{:url('set_sandler_finish_status')}",
+                data:dataJson,
+                dataType:'json',
+                success:function(response){
+                    if(!response.success){
+                        $.toptip(response.msg, 'error');
+                    }
+                },
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

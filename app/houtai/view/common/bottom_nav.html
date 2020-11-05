@@ -1,0 +1,21 @@
+<div class="weui-tabbar letu-tabbar">
+    <a href="{:url('Message/index')}" class="weui-tabbar__item {if condition="in_array($Request.controller,array('Message'))"}weui-bar__item--on{/if}">
+        {if condition="$notReadMessageCount gt 0"}
+        <span class="weui-badge" style="position: absolute;top: -0.4em;right: 1.8em;">{if condition="$notReadMessageCount gt 99"}99+{else}{$notReadMessageCount}{/if}</span>
+        {/if}
+        <span class="weui-tabbar__icon fa fa-commenting-o"></span>
+        <p class="weui-tabbar__label">消息</p>
+    </a>
+    <a href="{:url('Index/index')}" class="weui-tabbar__item {if condition="in_array($Request.controller,array('Index'))"}weui-bar__item--on{/if}">
+        <div class="weui-tabbar__icon fa fa-users"></div>
+        <p class="weui-tabbar__label">客户</p>
+    </a>
+    <a href="{:url('App/index')}" class="weui-tabbar__item {if condition="in_array($Request.controller,array('App','SellFlow','CrmClue','CrmFollow','SellRecord','WorkAim','WorkSchedule'))"}weui-bar__item--on{/if}">
+    <span class="weui-tabbar__icon fa fa-navicon"></span>
+    <p class="weui-tabbar__label">应用</p>
+    </a>
+    <a href="{:url('My/index')}" class="weui-tabbar__item {if condition="in_array($Request.controller,array('My'))"}weui-bar__item--on{/if}">
+        <div class="weui-tabbar__icon fa fa-user"></div>
+        <p class="weui-tabbar__label">我的</p>
+    </a>
+</div>

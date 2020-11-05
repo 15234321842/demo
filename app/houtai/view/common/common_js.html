@@ -1,0 +1,26 @@
+<script src="/static/houtai/js/jquery-2.1.4.min.js"></script>
+<script src="/static/houtai/js/fastclick.js"></script>
+<script src="/static/houtai/js/jquery-weui.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        FastClick.attach(document.body);
+
+        //触发生成消息方法
+        $.ajax({
+            type:'GET',
+            dataType:"json",
+            url:"{:url('Message/build_message')}",
+            success:function(result){
+            }
+        });
+    });
+    function goBack(url){
+        if(url != ""){
+            window.location.href = url;
+        }else{
+            if(history.length > 1){
+                history.back();
+            }
+        }
+    }
+</script>

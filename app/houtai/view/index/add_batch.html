@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('{:url('add')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">客户 - 批量添加</h1>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit" method="post" action="{:url('add_batch_save')}">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">客户文本：格式 名称=手机号</div>
+                            <div class="letu-box-body">
+                                <textarea name="batch_customer" class="weui-textarea" placeholder="输入格式,名称=手机号1,手机号2,手机号3" rows="14"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="submit" class="weui-btn weui-btn_warn">确定批量添加</button>
+            </div>
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#frmSubmit").ajaxForm({
+            dataType:'json',
+            success:function(data){
+                if(data.success){
+                    $.toptip(data.msg, 'success');
+                }else{
+                    $.toptip(data.msg, 'error');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

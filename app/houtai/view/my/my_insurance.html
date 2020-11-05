@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+    <div class="weui-tab">
+        <div class="weui-tab__bd">
+            <div class="page-group">
+                <header class="bar bar-nav">
+                    <a class="button button-link button-nav pull-left" onclick="goBack('{:url('My/index')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+                    <h1 class="title">
+                        <span>我的保单</span>
+                    </h1>
+                    <span class="button button-link button-nav pull-right">
+                        <a href="{:url('insurance_my_add')}" style="margin-left: 10px;margin-right: 10px;"><span class="icon fa fa-plus"></span></a>
+                    </span>
+                </header>
+                <div id="scrollPage" class="content">
+                    <div class="weui-pull-to-refresh__layer">
+                        <div class='weui-pull-to-refresh__arrow'></div>
+                        <div class='weui-pull-to-refresh__preloader'></div>
+                        <div class="down">下拉刷新</div>
+                        <div class="up">释放刷新</div>
+                        <div class="refresh">正在刷新</div>
+                    </div>
+                    <div id="list" class="weui-cells_notbefore letu-customer">
+                        {volist name="list" id="vo"}
+                        <div class="weui-cell weui-cell_access">
+                            <div class="weui-cell__bd">
+                                <div class="weui-cell__ft">
+                                    <a href="{:letu_url('insurance_view',array('id'=>think_encrypt($vo['insurance_id'])))}">
+                                        <p class="clue_content">{$vo.insurance_main}</p>
+                                    </a>
+                                    <p class="clue_time weui-flex">
+                                        <span class="sell_money weui-flex__item">&yen;{$vo.first_premium|floatval}</span>
+                                        <span class="weui-flex__item" style="margin-left: 10px;">{$vo.first_pay_date|date='Y-m-d'}</span>
+                                        <span class="weui-flex__item" style="margin-left: 10px;">交费{$vo.pay_year}年</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                    {if condition="$list->lastPage() gt 1"}
+                    <div class="weui-loadmore">
+                        <span class="weui-loadmore__tips">点击加载更多</span>
+                    </div>
+                    {/if}
+                    {if condition="$list->total() eq 0"}
+                    <div class="weui-loadmore">
+                        <span class="weui-loadmore__tips">暂无数据</span>
+                    </div>
+                    {/if}
+            </div>
+        </div>
+        </div>
+    </div>
+{include file="common:common_js" /}
+<script type="text/template7" id="listTemplate">
+    {{#each data}}
+    <div class="weui-cell weui-cell_access">
+        <div class="weui-cell__bd">
+            <div class="weui-cell__ft">
+                <a href="{{view_url}}">
+                    <p class="clue_content">{{insurance_main}}</p>
+                </a>
+                <p class="clue_time weui-flex">
+                    <span class="sell_money weui-flex__item">&yen;{{first_premium}}</span>
+                    <span class="weui-flex__item" style="margin-left: 10px;">{{first_pay_date_format}}</span>
+                    <span class="weui-flex__item" style="margin-left: 10px;">交费{{pay_year}}年</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    var lastTime = '{$lastTime}';
+    var totalPage = '{$list->lastPage()}';
+    var scrollLoadingUrl = "{:url('insurance_scroll_loading')}";
+    var pullToRefreshUrl = "{:url('insurance_pull_to_refresh')}";
+
+    var param_json = {};
+    param_json.last_time = lastTime;
+    param_json.page = 1;
+    param_json.policy_type = 0;
+
+    function load_data(param_json){
+        $.ajax({
+            type:'POST',
+            dataType:"json",
+            data:param_json,
+            url:pullToRefreshUrl,
+            success:function(result){
+                totalPage = result.totalPages;
+                param_json.last_time = result.time;
+
+                if(result.data.length > 0){
+                    var template = $("#listTemplate").html();
+                    var compiledTemplate = $.Template7.compile(template);
+                    var html = compiledTemplate(result);
+
+                    $("#list").html(html);
+                }else{
+                    $("#list").empty();
+                }
+                $("#scrollPage").pullToRefreshDone();
+                if(totalPage > 1){
+                    $(".weui-loadmore").show();
+                }
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        //滚动点击加载
+        $(".weui-loadmore").click(function(){
+            param_json.page += 1;
+            if(param_json.page > totalPage){
+                return false;
+            }
+
+            $.ajax({
+                type:'POST',
+                dataType:"json",
+                data:param_json,
+                url:scrollLoadingUrl,
+                success:function(result){
+                    if(result.data.length > 0){
+                        var template = $("#listTemplate").html();
+                        var compiledTemplate = $.Template7.compile(template);
+                        var html = compiledTemplate(result);
+
+                        $("#list").append(html);
+
+                        if(param_json.page == totalPage){
+                            $(".weui-loadmore").hide();
+                        }
+                    }
+                }
+            });
+        });
+
+        //下拉刷新
+        $("#scrollPage").pullToRefresh();
+        $("#scrollPage").on("pull-to-refresh", function() {
+            setTimeout(function() {
+                param_json.page = 1;
+                load_data(param_json);
+            }, 2000);
+        });
+
+    });
+</script>
+</body>
+</html>

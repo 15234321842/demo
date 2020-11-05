@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+<div class="page-group letu-app">
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="{:url('CrmClue/index')}">
+            <div class="weui-cell__bd">
+                <p>客户线索</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="{:url('CrmFollow/index')}">
+            <div class="weui-cell__bd">
+                <p>客户跟进</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
+    <div class="weui-cells">
+        <!--<a class="weui-cell weui-cell_access" href="{:url('Customer/analyze')}">-->
+            <!--<div class="weui-cell__bd">-->
+                <!--<p>客户分析</p>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__ft"></div>-->
+        <!--</a>-->
+        <a class="weui-cell weui-cell_access" href="{:url('SellFlow/index')}">
+            <div class="weui-cell__bd">
+                <p>目标名单</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="{:url('WorkAim/index')}">
+            <div class="weui-cell__bd">
+                <p>目标制定</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="{:url('SellRecord/index')}">
+            <div class="weui-cell__bd">
+                <p>销售记录</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="{:url('WorkSchedule/index')}">
+            <div class="weui-cell__bd">
+                <p>日程安排</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
+</div>
+{include file="common:bottom_nav" /}
+</body>
+</html>

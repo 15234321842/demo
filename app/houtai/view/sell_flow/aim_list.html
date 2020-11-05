@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group letu-aim-list">
+    <header class="bar bar-nav">
+        <div class="letu-flex">
+            <div class="letu-flex-item">
+                <span class="fa fa-angle-left" onclick="goBack('{:url('SellFlow/index')}');"></span>
+                <a href="{:url('SellFlow/aim_list')}"><span class="letu-tab-title {if condition='$add eq 0'}highlight-text-red{/if}">未添加名单</span></a>
+            </div>
+            <div class="letu-flex-item">
+                <a href="{:letu_url('SellFlow/aim_list',array('add'=>1))}"><span class="letu-tab-title {if condition='$add eq 1'}highlight-text-red{/if}">已添加名单</span></a>
+            </div>
+        </div>
+    </header>
+    <div id="scrollPage" class="content">
+        <div class="weui-pull-to-refresh__layer">
+            <div class='weui-pull-to-refresh__arrow'></div>
+            <div class='weui-pull-to-refresh__preloader'></div>
+            <div class="down">下拉刷新</div>
+            <div class="up">释放刷新</div>
+            <div class="refresh">正在刷新</div>
+        </div>
+        <div id="list" class="weui-cells_notbefore letu-customer">
+            {volist name="list" id="vo"}
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <div class="weui-flex">
+                        <div class="weui-flex__item_2 user"><span class="weui-badge {if condition='$vo.regular_customer eq 1'}badge-old{/if}">{:config('app.regular_customer.'.$vo['regular_customer'])}</span>{$vo.customer_name}</div>
+                        {php}$mobile=explode(',',$vo['mobile']);{/php}
+                        <div class="weui-flex__item">{:config('app.customer_relations.'.$vo['customer_relations'])}</div>
+                        <div class="weui-flex__item weui-cell__ft"><span data-id="{$vo.customer_id}" class="letu-command fa {if condition='$add eq 0'}fa-plus-square{else}fa-minus-square{/if}"></span></div>
+                    </div>
+                </div>
+            </div>
+            {/volist}
+        </div>
+        {if condition="$list->lastPage() gt 1"}
+        <div class="weui-loadmore">
+            <span class="weui-loadmore__tips">点击加载更多</span>
+        </div>
+        {/if}
+        {if condition="$list->total() eq 0"}
+        <div class="weui-loadmore">
+            <span class="weui-loadmore__tips">暂无数据</span>
+        </div>
+        {/if}
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/template7" id="listTemplate">
+{{#each data}}
+<div class="weui-cell">
+    <div class="weui-cell__bd">
+        <div class="weui-flex">
+            <div class="weui-flex__item_2 user"><span class="weui-badge {{#js_compare "this.regular_customer == 1"}}badge-old{{/js_compare}}">{{regular_customer_text}}</span>{{customer_name}}</div>
+            <div class="weui-flex__item">{{customer_relations}}</div>
+            <div class="weui-flex__item weui-cell__ft"><span data-id="{{customer_id}}" class="letu-command fa {if condition='$add eq 0'}fa-plus-square{else}fa-minus-square{/if}"></span></div>
+        </div>
+    </div>
+</div>
+{{/each}}
+</script>
+<script type="text/javascript">
+    var lastTime = '{$lastTime}';
+    var totalPage = '{$list->lastPage()}';
+    var scrollLoadingUrl = "{:url('aim_list_scroll_loading')}";
+    var pullToRefreshUrl = "{:url('aim_list_pull_to_refresh')}";
+    var param_add = '{$add}';
+
+    var param_json = {};
+    param_json.last_time = lastTime;
+    param_json.page = 1;
+    param_json.add = param_add;
+
+    $(document).ready(function(){
+        $("#list").on("click",".letu-command",function(){
+            var $this = $(this);
+            var param_aim = {};
+            param_aim.id = $this.attr("data-id");
+            param_aim.add = param_add;
+
+            $.ajax({
+                type:'POST',
+                dataType:"json",
+                data:param_aim,
+                url:"{:url('aim_list_add')}",
+                success:function(response){
+                    if(response.success){
+                        $.toptip(response.msg, 'success');
+                        $this.closest(".weui-cell").remove();
+                    }else{
+                        $.toptip(response.msg, 'error');
+                    }
+                }
+            });
+        });
+        //滚动点击加载
+        $(".weui-loadmore").click(function(){
+            param_json.page += 1;
+            if(param_json.page > totalPage){
+                return false;
+            }
+            $.ajax({
+                type:'POST',
+                dataType:"json",
+                data:param_json,
+                url:scrollLoadingUrl,
+                success:function(result){
+                    if(result.data.length > 0){
+                        var template = $("#listTemplate").html();
+                        var compiledTemplate = $.Template7.compile(template);
+                        var html = compiledTemplate(result);
+
+                        $("#list").append(html);
+
+                        if(param_json.page == totalPage){
+                            $(".weui-loadmore").hide();
+                        }
+                    }
+                }
+            });
+        });
+
+        //下拉刷新
+        $("#scrollPage").pullToRefresh();
+        $("#scrollPage").on("pull-to-refresh", function() {
+            setTimeout(function() {
+                param_json.page = 1;
+                $.ajax({
+                    type:'POST',
+                    dataType:"json",
+                    data:{add:param_add},
+                    url:pullToRefreshUrl,
+                    success:function(result){
+                        totalPage = result.totalPages;
+                        param_json.last_time = result.time;
+
+                        if(result.data.length > 0){
+                            var template = $("#listTemplate").html();
+                            var compiledTemplate = $.Template7.compile(template);
+                            var html = compiledTemplate(result);
+
+                            $("#list").html(html);
+                        }
+                        $("#scrollPage").pullToRefreshDone();
+                        if(totalPage > 1){
+                            $(".weui-loadmore").show();
+                        }
+                    }
+                });
+            }, 2000);
+        });
+    });
+</script>
+</body>
+</html>

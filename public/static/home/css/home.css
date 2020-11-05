@@ -1,0 +1,80 @@
+@font-face {
+  font-family: "iconfont-sm";
+  src: url(../fonts/font_1433401008_2229297.woff) format('woff'), url(../fonts/font_1433401008_2229297.ttf) format('truetype'),url(../fonts/font_1433401008_2229297.svg#iconfont) format('svg');
+}
+body, html {
+  height: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+.page-group{
+  padding: 5px 8px;
+}
+header,
+hgroup,
+article,
+footer,
+video,
+audio {
+  display: block;
+}
+.grid_8,
+.grid_4 {
+  float: left;
+  display: inline;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.grid_8 {
+  width: 620px;
+}
+
+.grid_4 {
+  width: 300px;
+}
+
+.alpha {
+  margin-left: 0;
+}
+
+.omega {
+  margin-right: 0;
+}
+
+.clear {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+.audio, .video {
+  display: block;
+  background: #000;
+}
+.videos {
+  width: 100%;
+  padding: 0;
+  margin: 0 auto 20px auto;
+  position: relative;
+  height: 349px;
+}
+#content {
+  background: white;
+  padding-bottom: 18px;
+}
+.video,
+.audio {
+  display: block;
+  background: black;
+}
+
+.video {
+  border: 1px #333 solid;
+  width:100%;
+}
+
+.audio {
+  width: 300px;
+}

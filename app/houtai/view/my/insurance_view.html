@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('{$backUrl}');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">保险单 - 详情</h1>
+        <a class="button button-link button-nav pull-right" href="{:letu_url('insurance_edit',array('id'=>think_encrypt($model['insurance_id'])))}"><span class="icon fa fa-edit"></span></a>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">保险公司：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.insurance_company}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">客服电话：</label></div>
+                    <div class="weui-cell__bd"><p><a href="tel:{$model.service_telephone}">{$model.service_telephone}</a></p></div>
+                </div>
+                {if condition="$model['policy_type'] eq 1"}
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">保险客户：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.customer_name}</p></div>
+                </div>
+                {/if}
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">投保人：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.policy_holder}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">被保险人：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.insured}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">人员关系：</div>
+                            <div class="letu-box-body weui-cells_checkbox letu-checkbox">
+                                <label class="letu-radio-inline weui-check__label">
+                                    <div class="weui-cell__hd">
+                                        <i class="weui-icon-checked"></i>
+                                    </div>
+                                    <div class="weui-cell__bd"><p>{:config('app.people_relation.'.$model['people_relation'])}</p></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">缴费日期：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.first_pay_date|date='Y-m-d'}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">生效日期：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.effective_date|date='Y-m-d'}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">首年保费：</label></div>
+                    <div class="weui-cell__bd weui-flex">
+                        <p>{$model.first_premium|floatval}</p>
+                        <span class="weui-flex__item input_int_unit">元</span>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">主险名称：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.insurance_main}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">缴费年限：</label></div>
+                    <div class="weui-cell__bd weui-flex">
+                        <p>{$model.pay_year}</p>
+                        <span class="weui-flex__item input_int_unit">年</span>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">联系电话：</label></div>
+                    <div class="weui-cell__bd"><p><a href="tel:{$model.link_phone}">{$model.link_phone}</a></p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">联系地址：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.link_address}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">保险明细：<span>险种名称/保障期限/交费期限/保额</span></div>
+                            <div class="letu-box-body"><p>{$model.insurance_detail|nl2br|raw}</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="button" id="btnDel" class="weui-btn weui-btn_warn" data-href="{:url('insurance_del')}" data-id="{:think_encrypt($model.insurance_id)}">删除保险单</button>
+            </div>
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "#btnDel", function() {
+            var $element = $(this);
+            var data = {};
+            data.id = $element.attr('data-id');
+
+            $.confirm("您确定要删除保险单？", "确认删除?", function() {
+                $.ajax({
+                    type:'post',
+                    url:$element.attr("data-href"),
+                    data:data,
+                    dataType:'json',
+                    success:function(response){
+                        if(response.success){
+                            if(response.url != ""){
+                                setTimeout(function(){
+                                    window.location.href = response.url;
+                                },2000);
+                            }
+                            $.toptip(response.msg, 'success');
+                        }else{
+                            $.toptip(response.msg, 'error');
+                        }
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                    }
+                });
+            }, function() {
+                //取消操作
+            });
+
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('{:url('WorkSchedule/index')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">日程任务 - 详情</h1>
+        <a class="button button-link button-nav pull-right" href="{:letu_url('edit',array('id'=>think_encrypt($model['task_id'])))}"><span class="icon fa fa-edit"></span></a>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit" method="post" action="{:url('edit_save')}">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">日程日期：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.schedule_date|date='Y-m-d'}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">任务时间：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.task_time|date='H:i'}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">任务标题：</label></div>
+                    <div class="weui-cell__bd">{$model.task_title}</div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">任务状态：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{:config('app.task_status.'.$model['task_status'])}</p></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">任务级别：</div>
+                            <div class="letu-box-body weui-cells_checkbox letu-checkbox">
+                                <label class="letu-radio-inline weui-check__label">
+                                    <div class="weui-cell__hd">
+                                        <i class="weui-icon-checked"></i>
+                                    </div>
+                                    <div class="weui-cell__bd"><p>{:config('app.task_level.'.$model['task_level'])}</p></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">任务内容：</div>
+                            <div class="letu-box-body"><p>{$model.task_content}</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="button" id="btnDel" class="weui-btn weui-btn_warn" data-href="{:url('del')}" data-id="{:think_encrypt($model.task_id)}">删除日程任务</button>
+            </div>
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "#btnDel", function() {
+            var $element = $(this);
+            var data = {};
+            data.id = $element.attr('data-id');
+
+            $.confirm("您确定要删除日程任务？", "确认删除?", function() {
+                $.ajax({
+                    type:'post',
+                    url:$element.attr("data-href"),
+                    data:data,
+                    dataType:'json',
+                    success:function(response){
+                        if(response.success){
+                            if(response.url != ""){
+                                setTimeout(function(){
+                                    window.location.href = response.url;
+                                },2000);
+                            }
+                            $.toptip(response.msg, 'success');
+                        }else{
+                            $.toptip(response.msg, 'error');
+                        }
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                    }
+                });
+            }, function() {
+                //取消操作
+            });
+
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

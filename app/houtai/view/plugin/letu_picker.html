@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>后台 - 客户添加 - {:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group letu-popup">
+    <header class="bar bar-nav">
+        <div class="letu-flex">
+            <div class="letu-flex-item">
+                <span class="fa fa-angle-left"></span>
+                <span class="letu-tab-title highlight-text-red">行业选择</span>
+            </div>
+            <div class="letu-flex-item">
+                <span class="letu-tab-title">行业添加</span>
+            </div>
+        </div>
+    </header>
+    <div class="letu-tab tab-select">
+        <div class="letu-select-body">
+            <div class="letu-select-body-flex">
+                <div class="weui-cells_checkbox">
+                    {volist name="customerRelationsList" id="vo"}
+                    <label class="letu-radio-inline weui-check__label">
+                        <div class="weui-cell__hd">
+                            <input type="radio" name="customer_relations" class="weui-check" value="{$key}" {if condition="$key eq 0"}checked="true"{/if}/>
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd"><p>{$vo}</p></div>
+                    </label>
+                    {/volist}
+                </div>
+            </div>
+        </div>
+        <div class="letu-bottom-btn">
+            <div class="weui-btn-area letu-btn-area">
+                <button type="button" class="weui-btn weui-btn_warn">确定选择</button>
+            </div>
+        </div>
+    </div>
+    <div class="letu-tab">
+        <div class="letu-select-body" style="padding-top: 0;padding-left: 0;padding-right: 0;">
+            <form id="frmSelect" method="post" action="{:url('add_save')}">
+                <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">行业名称：</label></div>
+                        <div class="weui-cell__bd">
+                            <input type="text" name="industry_name" class="weui-input" placeholder="请输入行业名称" maxlength="100" />
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">名称首字母：</label></div>
+                        <div class="weui-cell__bd">
+                            <input type="text" name="name_first_letter" class="weui-input" placeholder="请输入名称首字母" maxlength="100" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="letu-bottom-btn">
+            <div class="weui-btn-area letu-btn-area">
+                <button type="button" class="weui-btn weui-btn_warn">确定添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".letu-tab-title").click(function(){
+            var $this = $(this);
+            var tab_title = $(".letu-tab-title");
+            var index = $this.index(tab_title);
+
+            tab_title.removeClass("highlight-text-red");
+            $this.addClass("highlight-text-red");
+
+            var tab = $(".letu-tab");
+            tab.removeClass("tab-select");
+            tab.eq(index).addClass("tab-select");
+        });
+    });
+</script>
+</body>
+</html>

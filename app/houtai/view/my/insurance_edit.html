@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">保险单 - 编辑</h1>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit" method="post" action="{:url('insurance_edit_save')}">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">保险公司：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="insurance_company" class="weui-input" placeholder="请输入保险公司" maxlength="100" value="{$model.insurance_company}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">客服电话：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="service_telephone" class="weui-input" placeholder="请输入客服电话" maxlength="20" value="{$model.service_telephone}" />
+                    </div>
+                </div>
+                {if condition="$model.policy_type eq 1"}
+                <div class="weui-cell weui-cell_access sel-user">
+                    <div class="weui-cell__hd"><label class="weui-label">保险客户：</label></div>
+                    <div class="weui-cell__bd">
+                        <span id="customer_id_text">{$model.customer_name}</span>
+                        <input type="hidden" id="customer_id" name="customer_id" value="{$model.customer_id}" />
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </div>
+                {/if}
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">投保人：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="policy_holder" class="weui-input" placeholder="请输入投保人" maxlength="50" value="{$model.policy_holder}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">被保险人：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="insured" class="weui-input" placeholder="请输入被保险人" maxlength="50" value="{$model.insured}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">人员关系：</div>
+                            <div class="letu-box-body weui-cells_checkbox">
+                                {volist name="peopleRelationList" id="vo"}
+                                <label class="letu-radio-inline weui-check__label">
+                                    <div class="weui-cell__hd">
+                                        <input type="radio" name="people_relation" class="weui-check" value="{$key}" {if condition="$key eq $model['people_relation']"}checked="true"{/if}/>
+                                        <i class="weui-icon-checked"></i>
+                                    </div>
+                                    <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                </label>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">缴费日期：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" id="first_pay_date" name="first_pay_date" class="weui-input"
+                               placeholder="首年缴费日期" maxlength="20" value="{$model.first_pay_date|date='Y-m-d'}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">生效日期：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" id="effective_date" name="effective_date" class="weui-input"
+                               placeholder="生效日期" maxlength="20" value="{$model.effective_date|date='Y-m-d'}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">首年保费：</label></div>
+                    <div class="weui-cell__bd weui-flex">
+                        <input type="text" name="first_premium" class="weui-input input_int" placeholder="请输入多少" maxlength="20" value="{$model.first_premium|floatval}" />
+                        <span class="weui-flex__item input_int_unit">元</span>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">主险名称：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="insurance_main" class="weui-input" placeholder="请输入主险名称" maxlength="200" value="{$model.insurance_main}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">缴费年限：</label></div>
+                    <div class="weui-cell__bd weui-flex">
+                        <input type="text" name="pay_year" class="weui-input input_int" placeholder="输入多少" maxlength="3" value="{$model.pay_year}" />
+                        <span class="weui-flex__item input_int_unit">年</span>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">联系电话：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="link_phone" class="weui-input" placeholder="请输入联系电话" maxlength="50" value="{$model.link_phone}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">联系地址：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="link_address" class="weui-input" placeholder="请输入联系地址" maxlength="200" value="{$model.link_address}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">保险明细：<span>险种名称/保障期限/交费期限/保额</span></div>
+                            <div class="letu-box-body">
+                                <textarea id="insurance_detail" name="insurance_detail" class="weui-textarea" placeholder="请输入：险种名称/保障期限/交费期限/保额" rows="5">{$model.insurance_detail}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="submit" class="weui-btn weui-btn_warn">确认保存</button>
+            </div>
+            <input type="hidden" name="policy_type" value="{$model.policy_type}" />
+            <input type="hidden" name="insurance_id" value="{:think_encrypt($model.insurance_id)}" />
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script src="/static/houtai/js/plugins/letu/letu-picker-user.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#first_pay_date,#effective_date").calendar({'dateFormat': 'yyyy-mm-dd'});
+
+        $(".sel-user").letuPickerUser({
+            titleLeft:'未选择客户',
+            titleRight:'已选择客户',
+            url:"{:url('Plugin/customer_list')}",
+            mapKeyName:'customer_id',
+            mapValueName:'customer_name',
+            mapBadgeText:'regular_customer_text',
+            mapBadgeId:'regular_customer',
+            hiddenId:'customer_id',
+            multiple:false,
+            selectCallback:function(items){
+                var customer_id_text = $("#customer_id_text");
+                var customer_id = $("#customer_id");
+
+                if(items.length > 0){
+                    var ids = [];
+                    var ids_text = [];
+                    for(var i=0;i<items.length;i++){
+                        ids.push(items[i].key);
+                        ids_text.push(items[i].value);
+                    }
+                    customer_id_text.html(ids_text.join(' , '));
+                    customer_id.val(ids.join(','));
+                }else{
+                    customer_id_text.empty();
+                    customer_id.val("");
+                }
+            }
+        });
+
+        $("#frmSubmit").ajaxForm({
+            dataType:'json',
+            success:function(data){
+                if(data.success){
+                    $.toptip(data.msg, 'success');
+                }else{
+                    $.toptip(data.msg, 'error');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

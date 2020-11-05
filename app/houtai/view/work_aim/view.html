@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('{:url('WorkAim/index')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">目标 - 详情</h1>
+        <a class="button button-link button-nav pull-right" href="{:letu_url('edit',array('id'=>think_encrypt($model['aim_id'])))}"><span class="icon fa fa-edit"></span></a>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit" method="post">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">目标名称：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.aim_name}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">开始日期：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.date_begin|date='Y-m-d'}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">完成日期：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.date_end|date='Y-m-d'}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">目标状态：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{:config('app.finish_status.'.$model['finish_status'])}</p></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">目标实现计划：</div>
+                            <div class="letu-box-body">
+                                <p>{$model.realize_plan}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">目标总结：</div>
+                            <div class="letu-box-body">
+                                <p>{$model.finish_summary}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="button" id="btnDel" class="weui-btn weui-btn_warn" data-href="{:url('del')}" data-id="{:think_encrypt($model.aim_id)}">删除目标</button>
+            </div>
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "#btnDel", function() {
+            var $element = $(this);
+            var data = {};
+            data.id = $element.attr('data-id');
+
+            $.confirm("您确定要删除目标？", "确认删除?", function() {
+                $.ajax({
+                    type:'post',
+                    url:$element.attr("data-href"),
+                    data:data,
+                    dataType:'json',
+                    success:function(response){
+                        if(response.success){
+                            if(response.url != ""){
+                                setTimeout(function(){
+                                    window.location.href = response.url;
+                                },2000);
+                            }
+                            $.toptip(response.msg, 'success');
+                        }else{
+                            $.toptip(response.msg, 'error');
+                        }
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                    }
+                });
+            }, function() {
+                //取消操作
+            });
+
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

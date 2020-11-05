@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>后台 - 客户添加 - {:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group letu-popup">
+    <header class="bar bar-nav">
+        <div class="letu-flex">
+            <div class="letu-flex-item" style="border:none;">
+                <span class="fa fa-angle-left"></span>
+                <span class="letu-tab-title">省份城市选择</span>
+            </div>
+        </div>
+    </header>
+    <div class="letu-linkage">
+        <div class="letu-linkage-bar">
+            <div class="letu-linkage-bar-item linkage-bar-select">选择省份</div>
+            <div class="letu-linkage-bar-item">选择城市</div>
+            <div class="letu-linkage-bar-item">选择地区</div>
+        </div>
+        <div class="letu-linkage-body">
+            <div class="letu-linkage-body-flex">
+                <div class="weui-cells_checkbox letu-pull-data">
+                    {volist name="customerRelationsList" id="vo"}
+                    <label class="letu-radio-inline weui-check__label">
+                        <div class="weui-cell__hd">
+                            <input type="radio" name="customer_relations" class="weui-check" value="{$key}" {if condition="$key eq 0"}checked="true"{/if}/>
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd"><p>{$vo}</p></div>
+                    </label>
+                    {/volist}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="letu-bottom-btn">
+        <div class="weui-btn-area letu-btn-area">
+            <button type="button" class="weui-btn weui-btn_warn">确定选择</button>
+        </div>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".letu-tab-title").click(function(){
+            var $this = $(this);
+            var tab_title = $(".letu-tab-title");
+            var index = $this.index(tab_title);
+
+            tab_title.removeClass("highlight-text-red");
+            $this.addClass("highlight-text-red");
+
+            var tab = $(".letu-tab");
+            tab.removeClass("tab-select");
+            tab.eq(index).addClass("tab-select");
+        });
+    });
+</script>
+</body>
+</html>

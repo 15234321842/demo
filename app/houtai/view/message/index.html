@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-picker-container, .weui-picker-overlay{
+            z-index: 10002;
+        }
+    </style>
+</head>
+<body ontouchstart>
+<div class="weui-tab">
+    <div class="weui-tab__bd">
+        <div class="page-group">
+            <header class="bar bar-nav">
+                <h1 class="title">消息</h1>
+                <span class="button button-link button-nav pull-right">
+                    <span class="icon fa fa-search"></span>
+                </span>
+            </header>
+            <div id="scrollPage" class="content">
+                <div class="weui-pull-to-refresh__layer">
+                    <div class='weui-pull-to-refresh__arrow'></div>
+                    <div class='weui-pull-to-refresh__preloader'></div>
+                    <div class="down">下拉刷新</div>
+                    <div class="up">释放刷新</div>
+                    <div class="refresh">正在刷新</div>
+                </div>
+                <div id="list" class="weui-cells_notbefore letu-customer">
+                    {volist name="list" id="vo"}
+                    <div class="weui-cell weui-cell_access">
+                        <div class="weui-cell__bd">
+                            <div class="weui-cell__ft">
+                                <a href="{:letu_url('view',array('id'=>think_encrypt($vo['msg_id'])))}">
+                                    <p class="clue_content">{$vo.msg_title}</p>
+                                </a>
+                                <p class="clue_time">
+                                    <span>{$vo.msg_time|date='Y-m-d H:i'}</span>
+                                    <span style="margin-left: 10px;" class="weui-badge {if condition='$vo.is_read eq 1'}badge-old{/if}">{:config('app.is_read.'.$vo['is_read'])}</span>
+                                    <span style="margin-left: 10px;">{:config('app.msg_type.'.$vo['msg_type'])}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+                {if condition="$list->lastPage() gt 1"}
+                <div class="weui-loadmore">
+                    <span class="weui-loadmore__tips">点击加载更多</span>
+                </div>
+                {/if}
+                {if condition="$list->total() eq 0"}
+                <div class="weui-loadmore">
+                    <span class="weui-loadmore__tips">暂无数据</span>
+                </div>
+                {/if}
+            </div>
+        </div>
+        {include file="common:bottom_nav" /}
+    </div>
+</div>
+<div class="weui-mask"></div>
+<div class="search_panel">
+    <form id="frmSearch" method="post">
+        <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">消息日期：</label></div>
+                <div class="weui-cell__bd">
+                    <input type="text" id="msg_time" name="msg_time" class="weui-input" placeholder="请选择日期" maxlength="20" />
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">是否阅读：</label></div>
+                <div class="weui-cell__bd weui-cells_checkbox">
+                    {volist name="isReadList" id="vo"}
+                    <label class="letu-radio-inline weui-check__label">
+                        <div class="weui-cell__hd">
+                            <input type="radio" name="is_read" class="weui-check" value="{$key}"/>
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd"><p>{$vo}</p></div>
+                    </label>
+                    {/volist}
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <div class="letu-box">
+                        <div class="letu-box-title">消息类型：</div>
+                        <div class="letu-box-body weui-cells_checkbox">
+                            {volist name="msgTypeList" id="vo"}
+                            <label class="letu-radio-inline weui-check__label">
+                                <div class="weui-cell__hd">
+                                    <input type="radio" name="msg_type" class="weui-check" value="{$key}"/>
+                                    <i class="weui-icon-checked"></i>
+                                </div>
+                                <div class="weui-cell__bd"><p>{$vo}</p></div>
+                            </label>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="weui-btn-area letu-btn-search-bar">
+            <button id="btnSearch" type="button" class="weui-btn weui-btn_warn">确定搜索</button>
+            <button id="btnReset" type="button" class="weui-btn weui-btn_default" style="margin-left: 10px;">重置条件</button>
+        </div>
+    </form>
+</div>
+{include file="common:common_js" /}
+<script type="text/template7" id="listTemplate">
+    {{#each data}}
+    <div class="weui-cell weui-cell_access">
+        <div class="weui-cell__bd">
+            <div class="weui-cell__ft">
+                <a href="{{view_url}}">
+                    <p class="clue_content">{{msg_title}}</p>
+                </a>
+                <p class="clue_time">
+                    <span>{{msg_time_format}}</span>
+                    <span style="margin-left: 10px;" class="weui-badge {{#js_compare "this.is_read == 1"}}badge-old{{/js_compare}}">{{is_read_text}}</span>
+                    <span style="margin-left: 10px;">{{msg_type_text}}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    var lastTime = '{$lastTime}';
+    var totalPage = '{$list->lastPage()}';
+    var scrollLoadingUrl = "{:url('scroll_loading')}";
+    var pullToRefreshUrl = "{:url('pull_to_refresh')}";
+
+    var param_json = {};
+    param_json.last_time = lastTime;
+    param_json.page = 1;
+
+    function load_data(param_json){
+        $.ajax({
+            type:'POST',
+            dataType:"json",
+            data:param_json,
+            url:param_json.url,
+            success:function(result){
+                totalPage = result.totalPages;
+                param_json.last_time = result.time;
+
+                if(result.data.length > 0){
+                    var template = $("#listTemplate").html();
+                    var compiledTemplate = $.Template7.compile(template);
+                    var html = compiledTemplate(result);
+
+                    $("#list").html(html);
+                }else{
+                    $("#list").empty();
+                }
+
+                if(totalPage > 1){
+                    $(".weui-loadmore").show();
+                }else{
+                    $(".weui-loadmore").hide();
+                }
+            }
+        });
+    }
+
+    function update_search_params(){
+        param_json.msg_time = $("#msg_time").val();
+
+        var $msg_type = $("input[name='msg_type']:checked");
+        if($msg_type.prop("checked")){
+            param_json.msg_type = $msg_type.val();
+        }else{
+            delete param_json['msg_type'];
+        }
+
+        var $is_read = $("input[name='is_read']:checked");
+        if($is_read.prop("checked")){
+            param_json.is_read = $is_read.val();
+        }else{
+            delete param_json['is_read'];
+        }
+    }
+
+    $(document).ready(function(){
+        $("#msg_time").calendar({'dateFormat': 'yyyy-mm-dd'});
+        $(".weui-mask").click(function(){
+            $(this).removeClass("weui-mask--visible");
+            $(".search_panel").hide();
+        });
+        $(".fa-search").click(function(){
+            $(".weui-mask").addClass("weui-mask--visible");
+            $(".search_panel").show();
+        });
+        $("#btnSearch").click(function(){
+            $(".weui-mask").removeClass("weui-mask--visible");
+            $(".search_panel").hide();
+
+            update_search_params();
+            param_json.page = 1;
+            param_json.url = pullToRefreshUrl;
+            load_data(param_json);
+        });
+
+        $("#btnReset").click(function(){
+            $("#frmSearch")[0].reset();
+        });
+
+        //滚动点击加载
+        $(".weui-loadmore").click(function(){
+            param_json.page += 1;
+            if(param_json.page > totalPage){
+                return false;
+            }
+            $.ajax({
+                type:'POST',
+                dataType:"json",
+                data:param_json,
+                url:scrollLoadingUrl,
+                success:function(result){
+                    if(result.data.length > 0){
+                        var template = $("#listTemplate").html();
+                        var compiledTemplate = $.Template7.compile(template);
+                        var html = compiledTemplate(result);
+
+                        $("#list").append(html);
+
+                        if(param_json.page == totalPage){
+                            $(".weui-loadmore").hide();
+                        }
+                    }
+                }
+            });
+        });
+
+        //下拉刷新
+        $("#scrollPage").pullToRefresh();
+        $("#scrollPage").on("pull-to-refresh", function() {
+            setTimeout(function() {
+                param_json.page = 1;
+                param_json.url = pullToRefreshUrl;
+                load_data(param_json);
+                $("#scrollPage").pullToRefreshDone();
+            }, 2000);
+        });
+    });
+</script>
+</body>
+</html>

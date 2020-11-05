@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('{:url('WorkSchedule/index')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">日程任务 - 添加</h1>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit" method="post" action="{:url('add_save')}">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">日程日期：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" id="schedule_date" name="schedule_date" class="weui-input" placeholder="请选择日期" maxlength="20" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">任务时间：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" id="task_time" name="task_time" class="weui-input"
+                               placeholder="选择时间" maxlength="10" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">任务标题：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="task_title" class="weui-input" placeholder="请输入任务标题" maxlength="200" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">任务状态：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox">
+                        {volist name="taskStatusList" id="vo"}
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <input type="radio" name="task_status" class="weui-check" value="{$key}" {if condition="$key eq 0"}checked="true"{/if}/>
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{$vo}</p></div>
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">任务级别：</div>
+                            <div class="letu-box-body weui-cells_checkbox">
+                                {volist name="taskLevelList" id="vo"}
+                                <label class="letu-radio-inline weui-check__label">
+                                    <div class="weui-cell__hd">
+                                        <input type="radio" name="task_level" class="weui-check" value="{$key}" {if condition="$key eq 0"}checked="true"{/if}/>
+                                        <i class="weui-icon-checked"></i>
+                                    </div>
+                                    <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                </label>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">任务内容：</div>
+                            <div class="letu-box-body">
+                                <textarea name="task_content" class="weui-textarea" placeholder="请输入任务内容" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="submit" class="weui-btn weui-btn_warn">添加日程任务</button>
+            </div>
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script src="/static/houtai/js/plugins/letu/letu-picker-date.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#schedule_date").calendar({'dateFormat': 'yyyy-mm-dd'});
+
+        $("#task_time").letuPickerDate({
+            title: '选择 时间',
+            showDay:false,
+            showMonth:false,
+            showYear:false,
+            showTime:true
+        });
+
+        $("#frmSubmit").ajaxForm({
+            dataType:'json',
+            success:function(data){
+                if(data.success){
+                    $.toptip(data.msg, 'success');
+                }else{
+                    $.toptip(data.msg, 'error');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

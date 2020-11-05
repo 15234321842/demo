@@ -1,0 +1,17 @@
+<script src="/static/home/js/jquery-2.1.4.min.js"></script>
+<script src="/static/home/js/fastclick.js"></script>
+<script src="/static/home/js/jquery-weui.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        FastClick.attach(document.body);
+    });
+    function goBack(url){
+        if(url != ""){
+            window.location.href = url;
+        }else{
+            if(history.length > 1){
+                history.back();
+            }
+        }
+    }
+</script>

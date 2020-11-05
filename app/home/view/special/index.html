@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>张学友2018经典演唱会海口站-五源河体育广场</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .qq_video{
+            width:100%;
+            height: 349px;
+        }
+        .paike{
+            width:100%;
+            margin: 3px;
+        }
+        .summary{color: red;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <h2 class="title">张学友2018经典演唱会海口站难以忘怀的回忆</h2>
+    </header>
+    <div class="article">
+        <p class="summary">2018年11月04是，张学友演唱会海口站，嗨爆全场！朋友圈里发的那些10秒，几分钟的怎么看都不过瘾，我特地为大家全程实拍3小时的演唱会，让您如同亲临现场般的感觉！</p>
+        <div><img class="paike" src="/static/home/images/paike.jpg" /> </div>
+    </div>
+    <p>视频1</p>
+    <div class="videos">
+        <iframe class="qq_video" frameborder="0" src="https://v.qq.com/txp/iframe/player.html?vid=m07845eekpo" allowFullScreen="true"></iframe>
+    </div>
+    <p class="summary">视频2（时长：2小时40分，超精彩）本来是上传高清的，被腾讯视频转成标清了，无语。</p>
+    <div class="videos">
+        <iframe class="qq_video" frameborder="0" src="https://v.qq.com/txp/iframe/player.html?vid=p0784h5mkwv" allowFullScreen="true"></iframe>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script type="text/javascript">
+    $(document).ready(function(){
+        //触发生成消息方法
+        $.ajax({
+            type:'GET',
+            dataType:"json",
+            url:"{:url('Special/visit_count')}",
+            success:function(result){
+            }
+        });
+    });
+</script>
+</body>
+</html>

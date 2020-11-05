@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('{:url('CrmFollow/index')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">跟进日志 - 添加</h1>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit" method="post" action="{:url('add_save')}">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell weui-cell_access sel-user">
+                    <div class="weui-cell__hd"><label class="weui-label">跟进对象：</label></div>
+                    <div class="weui-cell__bd">
+                        <span id="customer_id_text"></span>
+                        <input type="hidden" id="customer_id" name="customer_id" />
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">跟进日期：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" id="follow_time" name="follow_time" class="weui-input"
+                               placeholder="跟进日期" maxlength="20" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">跟进类型：</div>
+                            <div class="letu-box-body weui-cells_checkbox">
+                                {volist name="followTypeList" id="vo"}
+                                <label class="letu-radio-inline weui-check__label">
+                                    <div class="weui-cell__hd">
+                                        <input type="radio" name="follow_type" class="weui-check" value="{$key}" {if condition="$key eq 0"}checked="true"{/if}/>
+                                        <i class="weui-icon-checked"></i>
+                                    </div>
+                                    <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                </label>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">跟进日志：</div>
+                            <div class="letu-box-body">
+                                <textarea name="follow_log" class="weui-textarea" placeholder="请输入跟进日志" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="submit" class="weui-btn weui-btn_warn">添加日志</button>
+            </div>
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script src="/static/houtai/js/plugins/letu/letu-picker-user.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#follow_time").calendar({'dateFormat': 'yyyy-mm-dd'});
+
+        $(".sel-user").letuPickerUser({
+            titleLeft:'未选择对象',
+            titleRight:'已选择对象',
+            url:"{:url('Plugin/customer_list')}",
+            mapKeyName:'customer_id',
+            mapValueName:'customer_name',
+            mapBadgeText:'regular_customer_text',
+            mapBadgeId:'regular_customer',
+            hiddenId:'customer_id',
+            multiple:false,
+            selectCallback:function(items){
+                var customer_id_text = $("#customer_id_text");
+                var customer_id = $("#customer_id");
+
+                if(items.length > 0){
+                    var ids = [];
+                    var ids_text = [];
+                    for(var i=0;i<items.length;i++){
+                        ids.push(items[i].key);
+                        ids_text.push(items[i].value);
+                    }
+                    customer_id_text.html(ids_text.join(' , '));
+                    customer_id.val(ids.join(','));
+                }else{
+                    customer_id_text.empty();
+                    customer_id.val("");
+                }
+            }
+        });
+
+        $("#frmSubmit").ajaxForm({
+            dataType:'json',
+            success:function(data){
+                if(data.success){
+                    $.toptip(data.msg, 'success');
+                }else{
+                    $.toptip(data.msg, 'error');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

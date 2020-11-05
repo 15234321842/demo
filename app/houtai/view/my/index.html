@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+<div class="page-group letu-my">
+    <div class="content">
+        <div class="my-header">
+            <div class="photo">
+                <img src="/static/houtai/images/default_photo.jpg" alt="my">
+            </div>
+            <div class="text">
+                <label for="zhanghao">账号：</label><span id="zhanghao">{$userName},昵称：{$nickName}</span>
+            </div>
+        </div>
+        <div class="weui-cells letu-cells_not_top_line">
+            <a class="weui-cell weui-cell_access" href="{:url('My/customer_insurance')}">
+                <div class="weui-cell__bd">
+                    <p>客户保单</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            <a class="weui-cell weui-cell_access" href="{:url('My/my_insurance')}">
+                <div class="weui-cell__bd">
+                    <p>我的保单</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+        </div>
+        <div class="weui-cells">
+            <a class="weui-cell weui-cell_access" href="{:url('My/talk_script')}">
+                <div class="weui-cell__bd">
+                    <p>我的话术</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+        </div>
+        <div class="weui-cells">
+            {if condition="$Request.session.userInfo.vip_level eq 33"}
+            <a class="weui-cell weui-cell_access"href="{:url('My/member')}">
+                <div class="weui-cell__bd">
+                    <p>会员管理</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            {/if}
+            <a class="weui-cell weui-cell_access"href="{:url('My/set_password')}">
+                <div class="weui-cell__bd">
+                    <p>设置密码</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            <a class="weui-cell weui-cell_access" data-href="{:url('Login/logout')}" onclick="logout(this);">
+                <div class="weui-cell__bd">
+                    <p>退出登录</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            <a class="weui-cell weui-cell_access">
+                <div class="weui-cell__bd">
+                    <p style="color:red;font-weight: bold;">联系作者QQ:282130106</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+        </div>
+    </div>
+</div>
+{include file="common:bottom_nav" /}
+{include file="common:common_js" /}
+<script type="text/javascript">
+    function logout(obj){
+        var $this = $(obj);
+
+        $.confirm("您确定要退出登录？", "确认退出?", function() {
+            $.ajax({
+                type:'get',
+                url:$this.attr("data-href"),
+                dataType:'json',
+                success:function(response){
+                    if(response.success){
+                        if(response.url != ""){
+                            setTimeout(function(){
+                                window.location.href = response.url;
+                            },2000);
+                        }
+                        $.toptip(response.msg, 'success');
+                    }else{
+                        $.toptip(response.msg, 'error');
+                    }
+                },
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                }
+            });
+        }, function() {
+            //取消操作
+        });
+
+        return false;
+    }
+</script>
+</body>
+</html>

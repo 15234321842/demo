@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+    <div class="weui-tab">
+        <div class="weui-tab__bd">
+            <div class="page-group">
+                <header class="bar bar-nav">
+                    <a class="button button-link button-nav pull-left" onclick="goBack('{:letu_url('view',array('id'=>$model['encrypt_id']))}');"><span class="icon fa fa-angle-left"></span>返回</a>
+                    <h1 class="title">七步签单</h1>
+                </header>
+                <div class="content">
+                    <div id="list" class="weui-cells_notbefore letu-customer">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item_2 user"><span class="weui-badge {if condition='$model.regular_customer eq 1'}badge-old{/if}">{:config('app.regular_customer.'.$model['regular_customer'])}</span>{$model.customer_name}</div>
+                                    <div class="weui-flex__item phone"><a href="tel:{$model['mobile'][0]}">{$model['mobile'][0]}</a></div>
+                                    <div class="weui-flex__item weui-cell__ft relations"><span>{:config('app.customer_relations.'.$model['customer_relations'])}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">1.亲和信任</div>
+                                    <div class="letu-box-body"><p>{$model.trust_content|nl2br|raw}</p></div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$sandlerIsFinishList[$model['sandler_trust']]}</p></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">2.事先约定</div>
+                                    <div class="letu-box-body"><p>{$model.appoint_content|nl2br|raw}</p></div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$sandlerIsFinishList[$model['sandler_appoint']]}</p></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">3.挖掘痛点</div>
+                                    <div class="letu-box-body"><p>{$model.pain_content|nl2br|raw}</p></div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$sandlerIsFinishList[$model['sandler_pain']]}</p></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">4.明确预算</div>
+                                    <div class="letu-box-body"><p>{$model.budget_content|nl2br|raw}</p></div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$sandlerIsFinishList[$model['sandler_budget']]}</p></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">5.验证决策</div>
+                                    <div class="letu-box-body"><p>{$model.decision_content|nl2br|raw}</p></div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$sandlerIsFinishList[$model['sandler_decision']]}</p></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">6.方案展示</div>
+                                    <div class="letu-box-body"><p>{$model.scheme_content|nl2br|raw}</p></div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$sandlerIsFinishList[$model['sandler_scheme']]}</p></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">7.反悔销售</div>
+                                    <div class="letu-box-body"><p>{$model.deal_content|nl2br|raw}</p></div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$sandlerIsFinishList[$model['sandler_deal']]}</p></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-btn-area letu-btn-area">
+                            <a class="weui-btn weui-btn_warn" href="{:letu_url('flow_step_edit',array('id'=>$model['encrypt_id']))}">填写签单步骤内容</a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        </div>
+    </div>
+{include file="common:common_js" /}
+</body>
+</html>

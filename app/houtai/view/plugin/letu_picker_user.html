@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>后台 - 客户添加 - {:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group letu-popup">
+    <header class="bar bar-nav">
+        <div class="letu-flex">
+            <div class="letu-flex-item">
+                <span class="fa fa-angle-left"></span>
+                <span class="letu-tab-title">未选择对象</span>
+            </div>
+            <div class="letu-flex-item">
+                <span class="letu-tab-title highlight-text-red">已选择对象</span>
+            </div>
+        </div>
+    </header>
+    <div class="letu-user">
+        <div class="letu-user-body">
+            <div id="list" class="weui-cells_notbefore letu-customer">
+                <div class="weui-flex">
+                    <div class="weui-flex__item">
+                        {volist name="list" id="vo"}
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <span><span class="weui-badge {if condition='$vo.regular_customer eq 1'}badge-old{/if}">{:config('app.regular_customer.'.$vo['regular_customer'])}</span>{$vo.customer_name}</span>
+                                <span data-id="{$vo.customer_id}" class="letu-command fa fa-plus-square pull-right"></span>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                    <div class="weui-flex__item">
+                        {volist name="list" id="vo"}
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <span><span class="weui-badge {if condition='$vo.regular_customer eq 1'}badge-old{/if}">{:config('app.regular_customer.'.$vo['regular_customer'])}</span>{$vo.customer_name}</span>
+                                <span data-id="{$vo.customer_id}" class="letu-command fa fa-minus-square pull-right"></span>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="letu-bottom-btn">
+        <div class="weui-btn-area letu-btn-area">
+            <button type="button" class="weui-btn weui-btn_warn">确定选择</button>
+        </div>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".letu-tab-title").click(function(){
+            var $this = $(this);
+            var tab_title = $(".letu-tab-title");
+            var index = $this.index(tab_title);
+
+            tab_title.removeClass("highlight-text-red");
+            $this.addClass("highlight-text-red");
+
+            var tab = $(".letu-tab");
+            tab.removeClass("tab-select");
+            tab.eq(index).addClass("tab-select");
+        });
+    });
+</script>
+</body>
+</html>

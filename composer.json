@@ -1,0 +1,32 @@
+{
+    "name": "letu33",
+    "description": "Letu CRM",
+    "type": "project",
+    "keywords": [
+        "framework",
+        "thinkphp",
+        "ORM"
+    ],
+    "homepage": "http://www.letu33.com/",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "letu33",
+            "email": "282130106@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "topthink/framework": "^5.1",
+        "topthink/think-captcha": "^2.0",
+        "topthink/think-image": "^1.0",
+        "topthink/think-helper": "^1.0",
+        "topthink/think-mongo": "^2.0"
+    },
+    "extra": {
+        "think-path": "thinkphp"
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+    <div class="weui-tab">
+        <div class="weui-tab__bd">
+            <div class="page-group">
+                <header class="bar bar-nav">
+                    <a class="button button-link button-nav pull-left" onclick="goBack('{:letu_url('flow_step',array('id'=>$model['encrypt_id']))}');"><span class="icon fa fa-angle-left"></span>返回</a>
+                    <h1 class="title">七步签单</h1>
+                </header>
+                <div class="content">
+                <form id="frmSubmit" method="post" action="{:url('flow_step_edit_save')}">
+                    <div id="list" class="weui-cells_notbefore letu-customer">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item_2 user"><span class="weui-badge {if condition='$model.regular_customer eq 1'}badge-old{/if}">{:config('app.regular_customer.'.$model['regular_customer'])}</span>{$model.customer_name}</div>
+                                    <div class="weui-flex__item phone"><a href="tel:{$model['mobile'][0]}">{$model['mobile'][0]}</a></div>
+                                    <div class="weui-flex__item weui-cell__ft relations"><span>{:config('app.customer_relations.'.$model['customer_relations'])}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">1.亲和信任</div>
+                                    <div class="letu-box-body">
+                                        <textarea name="trust_content" class="weui-textarea" placeholder="建议写取得客户信任的方法" rows="3">{$model.trust_content}</textarea>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox">
+                                            {volist name="$sandlerIsFinishList" id="vo"}
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <input type="radio" name="sandler_trust" class="weui-check" value="{$key}" {if condition="$key eq $model.sandler_trust"}checked="true"{/if}/>
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                            </label>
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">2.事先约定</div>
+                                    <div class="letu-box-body">
+                                        <textarea name="appoint_content" class="weui-textarea" placeholder="建议写跟客户事先约定的内容" rows="3">{$model.appoint_content}</textarea>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox">
+                                            <div class="weui-cell__bd weui-cells_checkbox">
+                                                {volist name="$sandlerIsFinishList" id="vo"}
+                                                <label class="letu-radio-inline weui-check__label">
+                                                    <div class="weui-cell__hd">
+                                                        <input type="radio" name="sandler_appoint" class="weui-check" value="{$key}" {if condition="$key eq $model.sandler_appoint"}checked="true"{/if}/>
+                                                        <i class="weui-icon-checked"></i>
+                                                    </div>
+                                                    <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                                </label>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">3.挖掘痛点</div>
+                                    <div class="letu-box-body">
+                                        <textarea name="pain_content" class="weui-textarea" placeholder="建议写客户的痛点需求" rows="3">{$model.pain_content}</textarea>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox">
+                                            {volist name="$sandlerIsFinishList" id="vo"}
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <input type="radio" name="sandler_pain" class="weui-check" value="{$key}" {if condition="$key eq $model.sandler_pain"}checked="true"{/if}/>
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                            </label>
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">4.明确预算</div>
+                                    <div class="letu-box-body">
+                                        <textarea name="budget_content" class="weui-textarea" placeholder="建议写客户的真正预算" rows="3">{$model.budget_content}</textarea>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox">
+                                            {volist name="$sandlerIsFinishList" id="vo"}
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <input type="radio" name="sandler_budget" class="weui-check" value="{$key}" {if condition="$key eq $model.sandler_budget"}checked="true"{/if}/>
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                            </label>
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">5.验证决策</div>
+                                    <div class="letu-box-body">
+                                        <textarea name="decision_content" class="weui-textarea" placeholder="建议写客户的决策能力" rows="3">{$model.decision_content}</textarea>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox">
+                                            {volist name="$sandlerIsFinishList" id="vo"}
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <input type="radio" name="sandler_decision" class="weui-check" value="{$key}" {if condition="$key eq $model.sandler_decision"}checked="true"{/if}/>
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                            </label>
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">6.方案展示</div>
+                                    <div class="letu-box-body">
+                                        <textarea name="scheme_content" class="weui-textarea" placeholder="建议写客户对方案展示的反应" rows="3">{$model.scheme_content}</textarea>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox">
+                                            {volist name="$sandlerIsFinishList" id="vo"}
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <input type="radio" name="sandler_scheme" class="weui-check" value="{$key}" {if condition="$key eq $model.sandler_scheme"}checked="true"{/if}/>
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                            </label>
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-cell flow_step">
+                            <div class="weui-cell__bd">
+                                <div class="letu-box">
+                                    <div class="letu-box-title">7.反悔销售</div>
+                                    <div class="letu-box-body">
+                                        <textarea name="deal_content" class="weui-textarea" placeholder="建议写给客户反悔交易的铺垫内容" rows="3">{$model.deal_content}</textarea>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><label class="weui-label">是否完成：</label></div>
+                                        <div class="weui-cell__bd weui-cells_checkbox">
+                                            {volist name="$sandlerIsFinishList" id="vo"}
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__hd">
+                                                    <input type="radio" name="sandler_deal" class="weui-check" value="{$key}" {if condition="$key eq $model.sandler_deal"}checked="true"{/if}/>
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                                <div class="weui-cell__bd"><p>{$vo}</p></div>
+                                            </label>
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weui-btn-area letu-btn-area">
+                            <button type="submit" class="weui-btn weui-btn_warn">确认保存</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="customer_id" value="{$model.encrypt_id}" />
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#frmSubmit").ajaxForm({
+            dataType:'json',
+            success:function(data){
+                if(data.success){
+                    $.toptip(data.msg, 'success');
+                }else{
+                    $.toptip(data.msg, 'error');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+    <div class="weui-tab">
+        <div class="weui-tab__bd">
+            <div class="page-group">
+                <header class="bar bar-nav">
+                    <a class="button button-link button-nav pull-left" onclick="goBack('{:url('App/index')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+                    <h1 class="title">目标名单</h1>
+                    <a class="button button-link button-nav pull-right" href="{:url('aim_list')}"><span class="icon fa fa-user-plus"></span></a>
+                </header>
+                <div id="scrollPage" class="content">
+                    <div class="weui-pull-to-refresh__layer">
+                        <div class='weui-pull-to-refresh__arrow'></div>
+                        <div class='weui-pull-to-refresh__preloader'></div>
+                        <div class="down">下拉刷新</div>
+                        <div class="up">释放刷新</div>
+                        <div class="refresh">正在刷新</div>
+                    </div>
+                    <div id="list" class="weui-cells_notbefore letu-customer">
+                        {volist name="list" id="vo"}
+                        <div class="weui-cell weui-cell_access">
+                            <div class="weui-cell__bd">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item user">{$vo.customer_name}</div>
+                                    {php}$mobile=explode(',',$vo['mobile']);{/php}
+                                    <div class="weui-flex__item phone"><a href="tel:{$mobile[0]}">{$mobile[0]}</a></div>
+                                    <div class="weui-flex__item weui-cell__ft relations"><a href="{:letu_url('view',array('id'=>think_encrypt($vo['customer_id'])))}">{:config('app.customer_relations.'.$vo['customer_relations'])}</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                    {if condition="$list->lastPage() gt 1"}
+                    <div class="weui-loadmore">
+                        <span class="weui-loadmore__tips">点击加载更多</span>
+                    </div>
+                    {/if}
+                    {if condition="$list->total() eq 0"}
+                    <div class="weui-loadmore">
+                        <span class="weui-loadmore__tips">暂无数据</span>
+                    </div>
+                    {/if}
+            </div>
+        </div>
+        {include file="common:bottom_nav" /}
+        </div>
+    </div>
+{include file="common:common_js" /}
+<script type="text/template7" id="listTemplate">
+    {{#each data}}
+    <div class="weui-cell weui-cell_access">
+        <div class="weui-cell__bd">
+            <div class="weui-flex">
+                <div class="weui-flex__item user">{{customer_name}}</div>
+                <div class="weui-flex__item phone"><a href="tel:{{first_mobile}}">{{first_mobile}}</a></div>
+                <div class="weui-flex__item weui-cell__ft relations"><a href="{{view_url}}">{{customer_relations}}</a></div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    var lastTime = '{$lastTime}';
+    var totalPage = '{$list->lastPage()}';
+    var scrollLoadingUrl = "{:url('scroll_loading')}";
+    var pullToRefreshUrl = "{:url('pull_to_refresh')}";
+
+    var param_json = {};
+    param_json.last_time = lastTime;
+    param_json.page = 1;
+
+    $(document).ready(function(){
+        //滚动点击加载
+        $(".weui-loadmore").click(function(){
+            param_json.page += 1;
+            if(param_json.page > totalPage){
+                return false;
+            }
+            $.ajax({
+                type:'POST',
+                dataType:"json",
+                data:param_json,
+                url:scrollLoadingUrl,
+                success:function(result){
+                    if(result.data.length > 0){
+                        var template = $("#listTemplate").html();
+                        var compiledTemplate = $.Template7.compile(template);
+                        var html = compiledTemplate(result);
+
+                        $("#list").append(html);
+
+                        if(param_json.page == totalPage){
+                            $(".weui-loadmore").hide();
+                        }
+                    }
+                }
+            });
+        });
+
+        //下拉刷新
+        $("#scrollPage").pullToRefresh();
+        $("#scrollPage").on("pull-to-refresh", function() {
+            setTimeout(function() {
+                param_json.page = 1;
+                $.ajax({
+                    type:'POST',
+                    dataType:"json",
+                    url:pullToRefreshUrl,
+                    success:function(result){
+                        totalPage = result.totalPages;
+                        param_json.last_time = result.time;
+
+                        if(result.data.length > 0){
+                            var template = $("#listTemplate").html();
+                            var compiledTemplate = $.Template7.compile(template);
+                            var html = compiledTemplate(result);
+
+                            $("#list").html(html);
+                        }
+                        $("#scrollPage").pullToRefreshDone();
+                        if(totalPage > 1){
+                            $(".weui-loadmore").show();
+                        }
+                    }
+                });
+            }, 2000);
+        });
+    });
+</script>
+</body>
+</html>

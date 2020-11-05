@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">目标 - 编辑</h1>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit" method="post" action="{:url('edit_save')}">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">目标名称：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" name="aim_name" class="weui-input" placeholder="请输入目标名称" maxlength="200" value="{$model.aim_name}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">开始日期：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" id="date_begin" name="date_begin" class="weui-input"
+                               placeholder="开始日期" maxlength="20" value="{$model.date_begin|date='Y-m-d'}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">完成日期：</label></div>
+                    <div class="weui-cell__bd">
+                        <input type="text" id="date_end" name="date_end" class="weui-input"
+                               placeholder="完成日期" maxlength="20" value="{$model.date_end|date='Y-m-d'}" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">目标状态：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox">
+                        {volist name="finishStatusList" id="vo"}
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <input type="radio" name="finish_status" class="weui-check" value="{$key}" {if condition="$key eq $model.finish_status"}checked="true"{/if}/>
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{$vo}</p></div>
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">目标实现计划：</div>
+                            <div class="letu-box-body">
+                                <textarea name="realize_plan" class="weui-textarea" placeholder="请输入目标实现计划" rows="5">{$model.realize_plan}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">目标总结：</div>
+                            <div class="letu-box-body">
+                                <textarea name="finish_summary" class="weui-textarea" placeholder="请输入目标总结" rows="5">{$model.finish_summary}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="submit" class="weui-btn weui-btn_warn">确认保存</button>
+            </div>
+            <input type="hidden" name="aim_id" value="{:think_encrypt($model.aim_id)}" />
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#date_begin,#date_end").calendar({'dateFormat': 'yyyy-mm-dd'});
+
+        $("#frmSubmit").ajaxForm({
+            dataType:'json',
+            success:function(data){
+                if(data.success){
+                    $.toptip(data.msg, 'success');
+                }else{
+                    $.toptip(data.msg, 'error');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

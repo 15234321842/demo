@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">话术 - 详情</h1>
+        <a class="button button-link button-nav pull-right" href="{:letu_url('talk_script_edit',array('id'=>think_encrypt($model['script_id'])))}"><span class="icon fa fa-edit"></span></a>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">话术标题：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.script_title}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">话术类别：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{:config('app.script_type.'.$model['script_type'])}</p></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">话术内容：</div>
+                            <div class="letu-box-body"><p>{$model.script_content|nl2br|raw}</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="button" id="btnDel" class="weui-btn weui-btn_warn" data-href="{:url('talk_script_del')}" data-id="{:think_encrypt($model.script_id)}">删除话术</button>
+            </div>
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "#btnDel", function() {
+            var $element = $(this);
+            var data = {};
+            data.id = $element.attr('data-id');
+
+            $.confirm("您确定要删除话术？", "确认删除?", function() {
+                $.ajax({
+                    type:'post',
+                    url:$element.attr("data-href"),
+                    data:data,
+                    dataType:'json',
+                    success:function(response){
+                        if(response.success){
+                            if(response.url != ""){
+                                setTimeout(function(){
+                                    window.location.href = response.url;
+                                },2000);
+                            }
+                            $.toptip(response.msg, 'success');
+                        }else{
+                            $.toptip(response.msg, 'error');
+                        }
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                    }
+                });
+            }, function() {
+                //取消操作
+            });
+
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

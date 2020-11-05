@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .weui-input{color: #000000;}
+        .weui-label {
+            width: 130px;
+        }
+    </style>
+</head>
+<body ontouchstart>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left" onclick="goBack('{:url('My/member')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+        <h1 class="title">会员详情</h1>
+        <a class="button button-link button-nav pull-right" href="{:letu_url('member_edit',array('id'=>$model.encrypt_id))}"><span class="icon fa fa-edit"></span></a>
+    </header>
+    <div class="content letu-form">
+        <form id="frmSubmit">
+            <div class="weui-cells weui-cells_form letu-cells_not_top_line">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">账号名称：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.user_name}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">账号昵称：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.nickname}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">手机号码：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.reg_mobile}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">初始密码：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.init_password}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">初始密码更改：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{:config('app.init_password_change.'.$model['init_password_change'])}</p></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">性别：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{:config('app.sex.'.$model['sex'])}</p></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">用户类型：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{:config('app.user_type.'.$model['user_type'])}</p></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">用户状态：</label></div>
+                    <div class="weui-cell__bd weui-cells_checkbox letu-checkbox">
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__hd">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd"><p>{:config('app.user_status.'.$model['user_status'])}</p></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="letu-box">
+                            <div class="letu-box-title">会员等级：</div>
+                            <div class="letu-box-body weui-cells_checkbox letu-checkbox">
+                                <label class="letu-radio-inline weui-check__label">
+                                    <div class="weui-cell__hd">
+                                        <i class="weui-icon-checked"></i>
+                                    </div>
+                                    <div class="weui-cell__bd"><p>{:config('app.vip_level.'.$model['vip_level'])}</p></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">乐币：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.lecoin}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">注册时间：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.reg_time|date='Y-m-d H:i:s'}</p></div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">登录时间：</label></div>
+                    <div class="weui-cell__bd"><p>{$model.login_datetime|date='Y-m-d H:i:s'}</p></div>
+                </div>
+            </div>
+            <div class="weui-btn-area letu-btn-area">
+                <button type="button" id="btnDel" class="weui-btn weui-btn_warn" data-href="{:url('member_del')}" data-id="{$model.encrypt_id}">删除会员</button>
+            </div>
+        </form>
+    </div>
+</div>
+{include file="common:common_js" /}
+<script src="/static/houtai/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "#btnDel", function() {
+            var $element = $(this);
+            var data = {};
+            data.id = $element.attr('data-id');
+
+            $.confirm("您确定要删除会员？", "确认删除?", function() {
+                $.ajax({
+                    type:'post',
+                    url:$element.attr("data-href"),
+                    data:data,
+                    dataType:'json',
+                    success:function(response){
+                        if(response.success){
+                            if(response.url != ""){
+                                setTimeout(function(){
+                                    window.location.href = response.url;
+                                },2000);
+                            }
+                            $.toptip(response.msg, 'success');
+                        }else{
+                            $.toptip(response.msg, 'error');
+                        }
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                    }
+                });
+            }, function() {
+                //取消操作
+            });
+
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

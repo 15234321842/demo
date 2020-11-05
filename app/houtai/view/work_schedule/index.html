@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{:config('site_title')}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    {include file="common:common_css" /}
+    <style type="text/css">
+        .picker-item{
+            text-align: center;
+        }
+    </style>
+</head>
+<body ontouchstart>
+    <div class="weui-tab">
+        <div class="weui-tab__bd">
+            <div class="page-group">
+                <header class="bar bar-nav">
+                    <a class="button button-link button-nav pull-left" onclick="goBack('{:url('App/index')}');"><span class="icon fa fa-angle-left"></span>返回</a>
+                    <h1 class="title">
+                        <span>日程安排</span>
+                        <span class="sel-month">
+                            <input id="schedule_date" class="sel-date" value="{:date('Y-m-d',time())}" />
+                            <span class="fa fa-caret-down"></span>
+                        </span>
+                    </h1>
+                    <span class="button button-link button-nav pull-right">
+                        <a href="{:url('add')}" style="margin-left: 10px;margin-right: 10px;"><span class="icon fa fa-plus"></span></a>
+                    </span>
+                </header>
+                <div id="scrollPage" class="content">
+                    <div class="weui-pull-to-refresh__layer">
+                        <div class='weui-pull-to-refresh__arrow'></div>
+                        <div class='weui-pull-to-refresh__preloader'></div>
+                        <div class="down">下拉刷新</div>
+                        <div class="up">释放刷新</div>
+                        <div class="refresh">正在刷新</div>
+                    </div>
+                    <div id="list" class="weui-cells_notbefore letu-customer">
+                        {volist name="list" id="vo"}
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="weui-cell__ft">
+                                    <div class="weui-flex">
+                                        <a class="weui-flex__item_3 schedule_task" href="{:letu_url('view',array('id'=>think_encrypt($vo['task_id'])))}">
+                                            <span class="task_time">{$vo.task_time|date='H:i'}</span>
+                                            <span class="task_title">{$vo.task_title}</span>
+                                        </a>
+                                        <div class="weui-flex__item weui-cells_checkbox">
+                                            <label class="letu-radio-inline weui-check__label">
+                                                <div class="weui-cell__bd"><span class="task_level_color_{$vo.task_level}">{:config('app.task_level.'.$vo['task_level'])}</span></div>
+                                                <div class="weui-cell__hd">
+                                                    <input type="checkbox" name="task_status" class="weui-check" data-id="{:think_encrypt($vo['task_id'])}" value="{$vo.task_status}" {if condition="$vo.task_status eq 1"}checked{/if} />
+                                                    <i class="weui-icon-checked"></i>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                    {if condition="count($list) eq 0"}
+                    <div class="weui-loadmore">
+                        <span class="weui-loadmore__tips">没有日程安排</span>
+                    </div>
+                    {/if}
+            </div>
+        </div>
+        {include file="common:bottom_nav" /}
+        </div>
+    </div>
+{include file="common:common_js" /}
+<script type="text/template7" id="listTemplate">
+    {{#each data}}
+    <div class="weui-cell">
+        <div class="weui-cell__bd">
+            <div class="weui-cell__ft">
+                <div class="weui-flex">
+                    <a class="weui-flex__item_3 schedule_task" href="{{view_url}}">
+                        <span class="task_time">{{task_time_format}}</span>
+                        <span class="task_title">{{task_title}}</span>
+                    </a>
+                    <div class="weui-flex__item weui-cells_checkbox">
+                        <label class="letu-radio-inline weui-check__label">
+                            <div class="weui-cell__bd"><span class="task_level_color_{{task_level}}">{{task_level_text}}</span></div>
+                            <div class="weui-cell__hd">
+                                <input type="checkbox" name="task_status" class="weui-check" data-id="{{encrypt_id}}" value="{{task_status}}" {{#js_compare "this.task_status == 1"}}checked{{/js_compare}} />
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    var param_json = {};
+
+    function load_data(param_json){
+        var pullToRefreshUrl = "{:url('pull_to_refresh')}";
+
+        $.ajax({
+            type:'POST',
+            dataType:"json",
+            data:param_json,
+            url:pullToRefreshUrl,
+            success:function(result){
+                if(result.data.length > 0){
+                    var template = $("#listTemplate").html();
+                    var compiledTemplate = $.Template7.compile(template);
+                    var html = compiledTemplate(result);
+
+                    $("#list").html(html);
+                    $(".weui-loadmore").hide();
+                }else{
+                    $("#list").empty();
+                    $(".weui-loadmore").show();
+                }
+                $("#scrollPage").pullToRefreshDone();
+            }
+        });
+    }
+
+    $(document).ready(function(){
+
+        $(document).on("change","input[name='task_status']",function(){
+            var $this = $(this);
+            var dataJson = {};
+            dataJson.id = $this.attr("data-id");
+            dataJson.task_status = 0;
+            if($this.prop("checked")){
+                dataJson.task_status = 1;
+            }
+
+            $.ajax({
+                type:'post',
+                url:"{:url('set_task_status')}",
+                data:dataJson,
+                dataType:'json',
+                success:function(response){
+                    if(!response.success){
+                        $.toptip(response.msg, 'error');
+                    }
+                },
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                }
+            });
+        });
+
+        var schedule_date = $("#schedule_date");
+        schedule_date.calendar({
+            dateFormat: 'yyyy-mm-dd',
+            onClose:function(p){
+                param_json.schedule_date = p.input.val();
+                load_data(param_json);
+            }
+        });
+
+        //下拉刷新
+        $("#scrollPage").pullToRefresh();
+        $("#scrollPage").on("pull-to-refresh", function() {
+            setTimeout(function() {
+                param_json.schedule_date = $('#schedule_date').val();
+                load_data(param_json);
+            }, 2000);
+        });
+
+    });
+</script>
+</body>
+</html>
