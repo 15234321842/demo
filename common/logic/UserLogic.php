@@ -110,7 +110,7 @@ class UserLogic
      * @param User $mapVo
      * @return Result
      */
-    public function userLogin(User $mapVo){
+    public function userLogin($mapVo){
         $result = new Result();
         $result->success = false;
         $result->msg = '登录失败！';

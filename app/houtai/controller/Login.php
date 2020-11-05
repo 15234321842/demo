@@ -87,8 +87,8 @@ class Login extends Base
         $mapVo = new User();
         $mapVo->setUserName($username);
         $mapVo->setLoginPassword($userpass);
-
         $result = $logic->userLogin($mapVo);
+
         if($result->success){
             $userInfo = array();
             $userInfo['user_id'] = $result->data['user_id'];
