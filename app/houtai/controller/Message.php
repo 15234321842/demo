@@ -24,6 +24,7 @@ class Message extends Base{
         $params['receive_uid'] = $this->getUserId();
         $params['is_del'] = 0;
         $params['last_time'] = $lastTime;
+
         $logic = new MessageLogic();
         $list = $logic->paginate($params);
 

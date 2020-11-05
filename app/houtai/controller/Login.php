@@ -32,10 +32,6 @@ class Login extends Base
      * @return mixed
      */
     public function index(){
-        if($this->getUserId() > 0){
-            $this->redirect('/houtai/index/index');
-            exit;
-        }
         return $this->fetch();
     }
 
