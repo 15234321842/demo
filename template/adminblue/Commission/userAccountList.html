@@ -1,0 +1,106 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<script type="text/javascript" src="__STATIC__/My97DatePicker/WdatePicker.js"></script>
+<style>
+    .popMessage{
+        position: absolute;
+        top:50px;
+        left:50px;
+        height:200px;
+        width:350px;
+        border:1px solid #ff6f44;
+        background-color: #fff;
+        display: none;
+    }
+    .botton_sure{
+        /*position: absolute;*/
+        /*bottom: 10px;*/
+        /*left:80px;*/
+        text-align: center
+    }
+    .botton_sure span{
+        height:30px;
+        line-height: 30px;
+        width:60px;
+        background-color: #ff6f44;
+        color: #fff;
+        display: inline-block;
+        margin-right:10px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .main .main_box{
+        height:500px;
+        width:400px;
+        margin:0 auto;
+        margin-top:200px;
+        position: relative;
+    }
+    .main_box .main_box_img{
+        height:200px;
+        width:400px;
+        background: url('./upload/credential/dz.png') center center no-repeat;
+        background-size:contain;
+    }
+    .main_box_content{
+        color:OK
+
+
+    }
+    .Consultation_btn{
+        height:50px;
+        width:180px;
+        display: block;
+        background-color: #ff6f44;
+        font-size: 18px;
+        color:#fff;
+        line-height: 50px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin: 0 auto;
+
+    }
+
+</style>
+{/block}
+{block name="right_tab"}
+
+{/block}
+{block name="main"}
+<div class="main">
+    <div class="main_box">
+        <div class="main_box_img"> </div>
+        <div class="main_box_content">
+            <h3 align="center">该功能需要定制开发，请联系商家</h3>
+            <h4><p align="center">联系方式：18137882317</p></h4>
+            <span class="Consultation_btn"  onclick="ConsultationBtn()" align="center">点击咨询</span>
+        </div>
+        <div class="popMessage" id="popMessageBtn">
+            <h5>公司：河南比谷网络科技有限公司</h5>
+            <h5>地址：郑州市中州大道与农业路交叉口苏荷中心2020</h5>
+            <h5>联系人：胡总</h5>
+            <h5>定制电话：18137882317</h5>
+            <div class="botton_sure">
+                <span onclick="tohide()" align="center">确定</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</div>
+</div>
+{/block}
+{block name="script"}
+{include file="adminblue/pageCommon" /}
+<script src="./public/admin/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script  type="text/javascript" charset="utf-8">
+    function ConsultationBtn(){
+        $("#popMessageBtn").css('display','block');
+    }
+    function tohide(){
+        $("#popMessageBtn").css('display','none');
+    }
+</script>
+{/block}

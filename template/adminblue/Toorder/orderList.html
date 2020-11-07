@@ -1,0 +1,340 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<script type="text/javascript" src="__STATIC__/My97DatePicker/WdatePicker.js"></script>
+<link href="__STATIC__/blue/css/order/ns_orderlist.css" rel="stylesheet" type="text/css" />
+<style>
+.mytable.select td{padding-bottom:0;}
+.mytable.select div{display:inline-block;margin:0 10px 10px 0;}
+.mytable.select #more_search{display: block;}
+.table-class tbody td a {margin-left: 0;}
+.order-tool{display: inline;position: absolute;margin-top: 10px;margin-left: 16px;}
+.to-fixed{position: fixed;width: 85.5%;top: 50px;box-shadow: 0 2px 6px 0 rgba(0,0,0,.3);z-index: 5;}
+</style>
+{/block}
+<!-- {1block name="thirdmenu"}{/block} -->
+<!-- {1block name="warm_prompt"}{/block} -->
+{block name="right_tab_tip"}{/block}
+{block name="main"}
+<input type="hidden" id="order_id" />
+<input type="hidden" id="print_select_ids" />
+<input type="hidden" id="order_status" value="{$status}" />
+<div style="border:1px solid #e5e5e5;">
+	<table class="mytable select">
+		<tr>
+			<td>
+				<div>
+					<span>下单时间：</span>
+					<input type="text" id="startDate" class="input-common w100" placeholder="请选择开始日期" onclick="WdatePicker()" />
+					&nbsp;-&nbsp;
+					<input type="text" id="endDate" placeholder="请选择结束日期" class="input-common w100" onclick="WdatePicker()" />
+				</div>
+				<div>
+					<span>订单编号：</span>
+					<input id="orderNo" class="input-common w100" type="text" />
+					<!--<input type="button" value="更多搜索" class="btn-common more_search"/>-->
+					<input class="btn-common" type="button" onclick="searchData()" value="搜索"/>
+					<!--<input class="btn-common" type="button" onclick="dataExcel()" value="导出数据"/>-->
+				</div><br>
+				</span>
+			</td>
+		</tr>
+	</table>
+
+	<div class="divider"></div>
+	<div style="min-height: 53px;">
+		<nav class="order-nav">
+			<ul>
+				{foreach name="child_menu_list" item="child_menu" key="k" }
+					{eq name="child_menu['active']" value="1"}
+					<li class="selected"><a href="{:__URL('ADMIN_MAIN/'.$child_menu['url'])}">{$child_menu.menu_name}</a></li>
+				{else/}
+					<li><a href="{:__URL('ADMIN_MAIN/'.$child_menu['url'])}">{$child_menu.menu_name}</a></li>
+				{/eq}
+				{/foreach}
+
+			</ul>
+		</nav>
+	</div>
+	<table class="table-class">
+		<colgroup>
+			<col width="20%">
+			<col width="15%">
+			<col width="15%">
+			<col width="15%">
+			<col width="10%">
+			<col width="15%">
+			<!--<col width="15%">-->
+			<col width=10%">
+		</colgroup>
+		<thead>
+			<tr align="center">
+				<!--<div class="order-tool">-->
+					<!--<input type="checkbox" onclick="CheckAll(this)" id="check">-->
+					<!--<label for="check">全选</label>-->
+				<!--</div>-->
+				<th>商品信息</th>
+				<th>商品清单</th>
+				<th>卖家</th>
+				<th>买受人</th>
+				<th>转售金额</th>
+				<th>备注</th>
+				<!--<th>转售价格区间</th>-->
+				<th>上下架</th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>
+
+{/block}
+{block name="script"}
+
+{include file="adminblue/Order/orderAction"/}
+{include file="adminblue/Order/orderRefundAction"/}
+<!-- 订单打印 -->
+{include file="adminblue/Order/orderPrintAction"/}
+<script type="text/javascript">
+$(window).scroll(function(){
+	var scrollTop = $(window).scrollTop();
+	if(scrollTop > 140){
+		$("nav.order-nav").addClass("to-fixed");
+	}else{
+		$("nav.order-nav").removeClass("to-fixed");
+	}
+});
+$(function () {
+	$("[data-toggle='popover']").popover();
+});
+function searchData(){
+	LoadingInfo(1);
+}
+
+function LoadingInfo(page_index) {
+	var start_date = $("#startDate").val();
+	var end_date = $("#endDate").val();
+	var order_no = $("#orderNo").val();
+	var receiver_mobile = $("#receiverMobile").val();
+	var order_status = $("#order_status").val();
+	$.ajax({
+		type : "post",
+		url : "{:__URL('ADMIN_MAIN/toorder/orderlist')}",
+		data : {
+			"page_index" : page_index,
+			"page_size" : $("#showNumber").val(),
+			"start_date" : start_date,
+			"end_date" : end_date,
+			"order_no" : order_no,
+			"tostatus" : order_status,
+		},
+		success : function(data) {
+			var html = '';
+			if (data['data'] != null) {
+				//alert(JSON.stringify(data["data"][1]['order_item_list'][0]["goods_sku_list"]));
+				for (var i = 0; i < data['data'].length; i++) {
+					var order_id = data['data'][i]["order_id"];//订单id
+					var order_no = data['data'][i]["order_no"];//订单编号
+					var create_time = data['data'][i]["create_time"];//下单时间
+					var pic_cover_micro = data['data'][i]["order_item_list"][0]["picture"]['pic_cover_micro'];//商品图
+					var goods_id = data['data'][i]["order_item_list"][0]["goods_id"];//商品id
+					var goods_name = data['data'][i]["order_item_list"][0]["goods_name"];
+					var sku_name = data['data'][i]["order_item_list"][0]["sku_name"];//商品sku
+					var price = data['data'][i]["order_item_list"][0]["price"];//商品价格
+					var num = data['data'][i]["order_item_list"][0]["num"];//购买数量
+					var toprice = data['data'][i]["price"];//转售金额
+					var tomaxprice = data['data'][i]["tomaxprice"];//限制转售最大金额
+					var tominprice = data['data'][i]["tominprice"];//限制转售最小金额
+					var toname = data['data'][i]["toname"];//买受人
+					var tostatus = data['data'][i]["tostatus"];//转售状态
+					var tosoldout = data['data'][i]["tosoldout"];//转售状态
+					var order_status = data['data'][i]["order_status"];//转售状态
+					var goods_code = data['data'][i]["order_item_list"][0]["code"];
+					html += '<tr class="title-tr">';
+					html += '<td colspan="8">';
+					html +='<span>订单编号：'+order_no+'</span><span>下单时间：'+create_time+'</span>';
+					html += '</td></tr>';
+					html += '<tr><td>';
+					html += '<div class="product-img"><img src="'+__IMG(pic_cover_micro)+'"></div>';
+					html += '<div class="product-infor">';
+					html += '<a href="'+__URL('SHOP_MAIN/goods/goodsinfo?goodsid='+goods_id)+'" target="_blank">'+goods_name+'</a>';
+					html += '</div></td>';
+					//订单数量大于1个，调整样式
+					if(data['data'][i]["order_item_list"].length>1){
+						html += '<td>';
+						html += '<div class="cell" style="display: inline-block;"><span>'+price+'元</span></div>';
+						html += '<div class="cell" style="display: inline-block;float:right;">'+num+'件</div>';
+					}else{
+						html += '<td style="text-align:center;">';
+
+						html += '<div class="cell" style="display: inline-block;"><span>'+price+'元</span></div>';
+						html += '<div class="cell">'+num+'件</div>';
+					}
+					html += '</td>';
+
+
+					html += '<div class="cell"><td style="text-align:center">'+data['data'][i]["seller"]+'</td></div>';
+
+					if(toname){
+                        html +=	'<div><td>'+toname+'</td></div>';
+					}else{
+                        html +=	'<div><td>'+'—'+'</td></div>';
+					}
+
+					html += '<td  style="text-align:center">';
+					if(toprice){
+                        html += '<div class="cell"><b class="netprice" style="color:#666;">'+toprice+'元</b><br/></div></td>';
+					}else{
+                        html += '<div class="cell"><b class="netprice" style="color:#666;">'+'—'+'</b><br/></div></td>';
+					}
+                    if(tosoldout==1){
+                        html += '<td style="text-align:center;">'+'不可转售'+'</td>';
+                    }else if(tostatus==0 && order_status==4){
+                        html += '<td  style="text-align:center;">'+'可转售'+'</td>';
+					}else if(tostatus==1 && order_status==4){
+                        html += '<td style="text-align:center;">'+'转售中'+'</td>';
+                    }else if(tostatus==2 && order_status==4){
+                        html += '<td style="text-align:center;">'+'已转售'+'</td>';
+                    }
+//                    html +='<td style="text-align:center"><input class="input-common input-common-sort" order_id="' + order_id + '" style="width:90px;text-align:center;margin:0;" value="' + tominprice + '" onchange="changeMinprice(this)"' + 'type="number" title="设置商品转售的最小价格"> - <input class="input-common input-common-sort" order_id="' + order_id + '" style="width:90px;text-align:center;margin:0;" value="' + tomaxprice + '" onchange="changeMaxprice(this)"' + 'type="number" title="设置商品转售的最大价格"></td>';
+                    if(data['data'][i]["tosoldout"]==0){
+                        html +='<td style="width:150%;"><a href="javascript:modifyGoodsOnline('+data['data'][i]["order_id"]+',\'offline\')">已上架</a></td>';
+                    }else{
+                        html +='<td><a href="javascript:modifyGoodsOnline('+data['data'][i]["order_id"]+',\'online\')">已下架</a></td>';
+					}
+                    html +='</tr>';
+				}
+			} else {
+				html += '<tr align="center"><td colspan="9">暂无符合条件的订单</td></tr>';
+			}
+			$(".table-class tbody").html(html);
+			initPageData(data["page_count"],data.length,data['total_count']);
+			$("#pageNumber").html(pagenumShow(jumpNumber,$("#page_count").val(),{$pageshow}));
+		}
+	});
+}
+
+function addmemo(order_id,memo){
+	$("#order_id").val(order_id);
+	$("#memo").val(memo);
+	$("#Memobox").modal("show");
+}
+/**
+ * 订单数据导出
+ */
+function dataExcel(){
+	var start_date = $("#startDate").val();
+	var end_date = $("#endDate").val();
+	var user_name = $("#userName").val();
+	var order_no = $("#orderNo").val();
+	var receiver_mobile = $("#receiverMobile").val();
+	var order_status = $("#order_status").val();
+	var payment_type = $("#payment_type").val();
+	var order_ids= [];
+	$(".table-class tbody input[type = 'checkbox']:checked").each(function() {
+		if (!isNaN($(this).val())) {
+			order_ids.push($(this).val());
+		}
+	});
+	window.location.href=__URL("ADMIN_MAIN/order/orderDataExcel?start_date="+start_date+"&end_date="+end_date+"&user_name="+user_name+"&order_no="+order_no+"&order_status="+order_status+"&receiver_mobile="+receiver_mobile+"&payment_type="+payment_type+"&order_ids="+order_ids.toString());
+}
+
+/**
+* 批量删除已关闭订单
+*/
+function batchDelete(){
+	var order_ids= [];
+	$(".table-class tbody input[type = 'checkbox']:checked").each(function() {
+		if (!isNaN($(this).val())) {
+			order_ids.push($(this).val());
+		}
+	});
+	if(order_ids.length ==0){
+		$( "#dialog" ).dialog({
+			buttons: {
+				"确定,#e57373": function() {
+					$(this).dialog('close');
+				}
+			},
+			contentText:"请选择需要操作的记录",
+			title:"消息提醒",
+		});
+		return false;
+	}
+	delete_order(order_ids);
+}
+// 点击显示更多搜索
+$(".more_search").click(function(){
+	$("#more_search").slideToggle();
+})
+
+//商品上下架
+function modifyGoodsOnline(order_id,line){
+    if(line == "online"){
+        var url = "{:__URL('ADMIN_MAIN/Toorder/modifygoodsonline')}";
+        var lingStr = "上架";
+    }else{
+        var url = "{:__URL('ADMIN_MAIN/Toorder/modifygoodsoffline')}";
+        var lingStr = "下架";
+    }
+    $.ajax({
+        type : "post",
+        url : url,
+        data : { "order_id" : order_id },
+        success : function(data) {
+            if(data["code"] > 0 ){
+                LoadingInfo(getCurrentIndex(order_id,'#productTbody','tr[class="tr-title"]'));
+                $("#dialog" ).dialog({
+                    buttons: {
+                        "确定": function() {
+                            $(this).dialog('close');
+                        }
+                    },
+                    contentText:"商品"+lingStr+"成功",
+                    title:"消息提醒",
+                    time:3
+                });
+            }
+        }
+    })
+}
+////改变商品转售最小价格
+//function changeMinprice(event){
+//    var tominprice = parseInt($(event).val());
+//    $(event).val(tominprice);
+//    var order_id = $(event).attr("order_id");
+//
+//    $.ajax({
+//        type : "post",
+//        url : "{:__URL('ADMIN_MAIN/toorder/updateOrderMinPriceAjax')}",
+//        data : { "tominprice" : tominprice, "order_id" : order_id },
+//        success : function(data){
+//            if(data.code>0){
+//                LoadingInfo(getCurrentIndex(order_id,'#productTbody','tr[class="tr-title"]'));
+//                showTip(data.message,"success");
+//            }else{
+//                showTip(data.message,"error");
+//            }
+//        }
+//    })
+//}
+//
+////改变商品转售最大价格
+//function changeMaxprice(event){
+//    var tomaxprice = parseInt($(event).val());
+//    $(event).val(tomaxprice);
+//    var order_id = $(event).attr("order_id");
+//    $.ajax({
+//        type : "post",
+//        url : "{:__URL('ADMIN_MAIN/toorder/updateOrderMaxPriceAjax')}",
+//        data : { "tomaxprice" : tomaxprice, "order_id" : order_id },
+//        success : function(data){
+//            if(data.code>0){
+//                LoadingInfo(getCurrentIndex(order_id,'#productTbody','tr[class="tr-title"]'));
+//                showTip(data.message,"success");
+//            }else{
+//                showTip(data.message,"error");
+//            }
+//        }
+//    })
+//}
+</script>
+{/block}

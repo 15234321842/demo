@@ -1,0 +1,253 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<script type="text/javascript" src="__STATIC__/My97DatePicker/WdatePicker.js"></script>
+{/block}
+{block name="main"}
+<table class="mytable">
+    <tr>
+        <th width="20%" style="text-align: left;">
+            <button class="btn-common btn-small" style="margin:0 5px 0 0 !important;font-size: 20px"> 虚拟积分财务统计总表</button>
+            <!--<button class="btn-common btn-small" onclick="add_user()" style="margin:0 5px 0 0 !important;">添加会员</button>-->
+
+        </th>
+        <td width="10%">
+            <input type="text" id='startDate' placeholder="请选择开始日期" class="input-medium input-common" onclick="WdatePicker()"/>
+            &nbsp;-&nbsp;
+            <input type="text" id='endDate' placeholder="请选择结束日期" class="input-medium input-common" onclick="WdatePicker()" />
+            <!--<select id="form_type" class="select-common">-->
+                <!--<option value="">请选择类别</option>-->
+                <!--<option value="1">商城订单</option>-->
+                <!--<option value="2">订单退还</option>-->
+                <!--<option value="3">兑换</option>-->
+                <!--<option value="4">充值</option>-->
+                <!--<option value="5">签到</option>-->
+                <!--<option value="6">分享</option>-->
+                <!--<option value="7">注册</option>-->
+                <!--<option value="8">提现</option>-->
+                <!--<option value="9">提现退还</option>-->
+                <!--<option value="10">调整</option>-->
+            <!--</select>-->
+            <!--<input type="text" id='search_text' placeholder="请输入会员昵称" class="input-common" />-->
+            <input type="button" onclick="searchData()" value="搜索" class="btn-common" />
+        </td>
+    </tr>
+</table>
+<table class="table-class">
+    <thead>
+    <tr align="center">
+        <th >方向</th>
+        <th align="left">类别</th>
+        <th>合计</th>
+        <th align="left"></th>
+
+    </tr>
+    </thead>
+    <tbody>
+   <tr align="center">
+       <td >支出</td>
+       <td align="left" style="width:10%">代理充值</td>
+       <td id="Dailicongzhi"></td>
+       <td align="left"> <a href="/admin/member/pointlist?from_type=30" target="_blank"> 详情</a></td>
+   </tr>
+   <tr align="center">
+       <td >支出</td>
+       <td align="left" style="width:10%">线下现金充值</td>
+       <td id="Xianxia"></td>
+       <td align="left"> <a href="/admin/member/bank_transfer?from_type=4" target="_blank">  详情</a></td>
+   </tr>
+   <tr align="center">
+       <td >支出</td>
+       <td align="left" style="width:10%">银行卡转账支出</td>
+       <td id="Orderbankfree"></td>
+       <td align="left"> <a href="/admin/member/bank_transfer?from_type=1" target="_blank">  详情</a></td>
+   </tr>
+
+
+   <tr align="center">
+       <td >支出</td>
+       <td align="left" style="width:10%">订单返佣</td>
+       <td id="UserAccount"></td>
+       <td align="left"> <a href="/admin/Commission/userAccountList" target="_blank"> 详情</a></td>
+   </tr>   <tr align="center">
+       <td >支出</td>
+       <td align="left" style="width:10%">在线支付支出</td>
+       <td id="Xianshangfree"></td>
+       <td align="left"> <a href="/admin/Member/paymentList" target="_blank">  详情</a></td>
+   </tr>
+
+   <tr align="center">
+       <td >收入</td>
+       <td align="left" style="width:10%">在线支付</td>
+       <td id="Xianshang"></td>
+       <td align="left"> <a href="/admin/Member/paymentList" target="_blank"> 详情</a></td>
+   </tr>
+   <tr align="center">
+       <td >收入</td>
+       <td align="left" style="width:10%">虚拟积分支付</td>
+       <td id="orderjifen"></td>
+       <td align="left"> <a href="/admin/member/pointlist?from_type=111" target="_blank"> 详情</a></td>
+   </tr>
+
+   <tr align="center">
+       <td >收入</td>
+       <td align="left" style="width:10%">虚拟现金支付</td>
+       <td id="orderxianjin"></td>
+       <td align="left"> <a href="/admin/member/accountlist?from_type=111" target="_blank"> 详情</a></td>
+   </tr>
+   <tr align="center">
+       <td >收入</td>
+       <td align="left" style="width:10%">银行卡转账</td>
+       <td id="Orderbank"></td>
+       <td align="left"> <a href="/admin/member/bank_transfer?from_type=1" target="_blank"> 详情</a></td>
+   </tr>
+
+
+   <!--<tr align="center">-->
+       <!--<td >收入</td>-->
+       <!--<td align="left">商品订单-->
+       <!--</td>-->
+       <!--<td id="Shangping"></td>-->
+       <!--<td align="left"> <a href="/admin/order/orderlist?from_type=555" target="_blank"> 详情</a></td>-->
+
+   <!--</tr>-->
+   <!--<tr align="center">-->
+       <!--<td >收入</td>-->
+       <!--<td align="left">专业服务订单-->
+       <!--</td>-->
+       <!--<td id="ZhuanyeFuwudingdan"></td>-->
+       <!--<td align="left"> <a href="/admin/member/pointlist?from_type=25" target="_blank">详情</a></td>-->
+
+   <!--</tr>-->
+   <!--<tr align="center">-->
+       <!--<td >收入</td>-->
+       <!--<td align="left">祭祀商品订单-->
+       <!--</td>-->
+       <!--<td id="Jisidingdan"></td>-->
+       <!--<td align="left"> <a href="/admin/member/pointlist?from_type=222" target="_blank"> 详情</a></td>-->
+
+   <!--</tr>-->
+
+   <!--<tr align="center">-->
+       <!--<td >收入</td>-->
+       <!--<td align="left">现金提现</td>-->
+       <!--<td>888</td>-->
+       <!--<td align="left"> <a href="#"> 详情</a></td>-->
+
+   <!--</tr>-->
+
+   <!--<tr align="center">-->
+       <!--<td >收入</td>-->
+       <!--<td align="left">转账(积分调整)</td>-->
+       <!--<td id="Zhuanzhang"></td>-->
+       <!--<td align="left">  <a href="/admin/member/pointlist?from_type=10" target="view_frame"> 详情</a></td>-->
+
+   <!--</tr>-->
+   <tr align="center">
+       <td >收入</td>
+       <td align="left">积分转财务</td>
+       <td id="Caiwu"></td>
+       <td align="left">  <a href="/admin/member/pointlist?from_type=40" target="_blank"> 详情</a></td>
+
+   </tr>
+   <tr align="center">
+       <td >收入</td>
+       <td align="left">收益积分提现</td>
+       <td id="Jifentixian"></td>
+       <td align="left"> <a href="/admin/Commission/userCommissionWithdrawList" target="_blank"> 详情</a></td>
+
+   </tr>
+
+   <tr align="center">
+       <td >收入</td>
+       <td align="left">现金提现</td>
+       <td id="Xianjintixian"></td>
+       <td align="left"> <a href="/admin/member/usercommissionwithdrawlist" target="_blank"> 详情</a></td>
+
+   </tr>
+
+
+
+   <tr align="center">
+       <td >收入</td>
+       <td align="left">收益积分提现个税</td>
+       <td id="Jifengeshui"></td>
+       <td align="left"> <a href="/admin/Commission/userCommissionWithdrawList" target="_blank">详情</a></td>
+
+   </tr>
+
+   <tr align="center">
+       <td >收入</td>
+       <td align="left">收益积分手续费</td>
+       <td id="Jifenfree"></td>
+       <td align="left"> <a href="/admin/Commission/userCommissionWithdrawList" target="_blank"> 详情</a></td>
+
+   </tr>
+   <tr align="center">
+       <td >收入</td>
+       <td align="left">现金提现手续费</td>
+       <td id="Xianjinfree"></td>
+       <td align="left"> <a href="/admin/member/usercommissionwithdrawlist" target="_blank"> 详情</a></td>
+
+   </tr>
+   <tr align="center">
+       <td align="left"></td>
+       <td align="left">统计</td>
+       <td id="Tongji"></td>
+       <td align="left"></td>
+
+   </tr>
+    </tbody>
+</table>
+
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    function LoadingInfo(page_index) {
+        var search_text = $("#search_text").val();
+        var start_date = $("#startDate").val();
+        var end_date = $("#endDate").val();
+        var form_type = $("#form_type").val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('ADMIN_MAIN/Accountant/index')}",
+            data : {
+                "page_index" : page_index, "page_size" : $("#showNumber").val(), "search_text":search_text, "form_type":form_type, "start_date":start_date, "end_date":end_date
+            },
+            success : function(data) {
+                var html = '';
+                if (data) {
+                    $('#Dailicongzhi').html(-data['Dailicongzhi']);
+                    $('#Jifenfree').html(data['Jifenfree']);
+                    $('#Jifengeshui').html(data['Jifengeshui']);
+                    $('#Jifentixian').html(data['Jifentixian']);
+                    $('#Jisidingdan').html(data['Jisidingdan']);
+                    $('#Shangping').html(data['Shangping']);
+                    $('#ZhuanyeFuwudingdan').html(data['ZhuanyeFuwudingdan']);
+                    $('#Zhuanzhang').html(data['Zhuanzhang']);
+                    $('#Tongji').html(data['Tongji']);
+                    $('#Caiwu').html(data['Caiwu']);
+                    $('#Xianxia').html(data['Xianxia']);
+                    $('#Xianshang').html(data['Xianshang']);
+                    $('#Orderbank').html(data['Orderbank']);
+                    $('#Xianjintixian').html(data['Xianjintixian']);
+                    $('#Xianjinfree').html(data['Xianjinfree']);
+                    $('#UserAccount').html(data['UserAccount']);
+                    $('#orderjifen').html(data['orderjifen']);
+                    $('#orderxianjin').html(data['orderxianjin']);
+                    $('#Orderbankfree').html(data['Orderbankfree']);
+                    $('#Xianshangfree').html(data['Xianshangfree']);
+
+
+                } else {
+                    html += '<tr align="center" ><td colspan="2">暂无符合条件的数据记录</td></tr>';
+                }
+
+            }
+        });
+    }
+
+    function searchData(){
+        LoadingInfo(1);
+    }
+</script>
+{/block}

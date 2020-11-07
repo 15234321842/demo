@@ -1,0 +1,33 @@
+{extend name="adminblue/base" /}
+{block name="resources"}
+<!-- 编辑服务时，用到的JS、CSS资源 -->
+{include file="adminblue/Services/controlEditGoodsCommonResources"}
+{/block}
+{block name="main"}
+<div class="ncsc-form-goods">
+	{include file="adminblue/Services/fileAlbumImg"/}
+
+	<h3 class="js-goods_detail">服务详情</h3>
+	<dl>
+		<dt><i class="required">*</i>服务描述：</dt>
+		<dd>
+		<div class="controls" id="discripContainer">
+			<textarea id="tareaProductDiscrip" name="discripArea" style="height: 500px; width: 800px; display: none;"></textarea>
+			<script id="editor" type="text/plain" style="width: 100%; height: 500px;"></script>
+			<span class="help-inline">请填写服务描述</span>
+		</div>
+		</dd>
+	</dl>
+</div>
+<div class="btn-submit">
+	<button class="btn-common" id="btnSave" type="button">保存</button>
+</div>
+<script>
+	$("#btnSave").click(function(){
+	    var val = $("#tareaProductDiscrip").text();
+	    var val1 = $("#editor").val();
+		console.log(val);
+		console.log(val1);
+	});
+</script>
+{/block}

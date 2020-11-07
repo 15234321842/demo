@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css">
+<script src="__STATIC__/layui/layui.js"></script>
+<style>
+    img {
+        width: 40px;
+        height: 40px;
+        background: #eee;
+    }
+
+    #page {
+        text-align: center;
+    }
+</style>
+<body>
+<input type="hidden" id="index" value="{$index}">
+<form class="layui-form" action="" style="padding-top:20px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">添加类型</label>
+        <div class="layui-input-inline">
+            <select name="type" lay-filter="type">
+                <option value="goods">商品</option>
+                <option value="category">分类</option>
+                <option value="article">文章</option>
+                <option value="discount">限时秒杀活动</option>
+            </select>
+        </div>
+        <label class="layui-form-label">搜索关键词</label>
+        <div class="layui-input-inline">
+            <input type="text" name="search_text" required placeholder="请输入关键词" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-btn search">搜索</div>
+    </div>
+
+</form>
+<table class="layui-table">
+    <thead>
+    <tr id="thead">
+        <th>图片</th>
+        <th>商品名称</th>
+        <th>价格</th>
+        <th>销量</th>
+        <th>库存</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
+<div id="page"></div>
+</body>
+<script>
+    layui.use(['layer', 'jquery', 'laypage', 'form'], function () {
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var laypage = layui.laypage;
+        var form = layui.form;
+
+        var type = 'goods';
+
+        var urllist ={
+            goods: {
+                url: '/admin/goods/getsearchgoodslist',
+                head: ['图片', '商品名称', '价格', '销量', '库存', '操作'],
+                link:'/goods?id='
+            },
+            category: {
+                url: '/appapi/goods/goodsCategoryList',
+                head: ['分类名称', '子分类', '操作'],
+                link:'/searchgoods?id='
+            },
+            article: {
+                url: '/admin/cms/articlelist',
+                head: ['标题', '点击量/评论量', '发布时间', '状态', '操作'],
+                link:'/article?id='
+            },
+            discount: {
+                url: '/admin/promotion/getdiscountlist',
+                head: ['活动名称', '有效时间', '操作'],
+                link:'/flashsale?id='
+            }
+        };
+
+        form.on('select(type)', function (data) {
+            if (type != data.value) {
+                $('#list').html('');
+                type = data.value;
+                getList();
+                return false;
+            }
+            type = data.value;
+        });
+
+
+        getList();
+
+        function getList(page = 1, search_text = '') {
+            var param={page_index: page, search_text: search_text};
+            if(type=='discount'){
+                param.status=1;
+            }
+            $.post(urllist[type],param , function (res) {
+                var headhtml = '';
+                for (var i in urllist[type].head) {
+                    headhtml =headhtml+ '<td>' + urllist[type].head[i] + '</td>'
+                }
+                $('#thead').html(headhtml);
+                if (res.data) {
+                    var list = res.data;
+                    var html = '';
+
+                    if(type=='goods'){
+                        for (var i in list) {
+                            var text = '<tr>';
+                            text += '<td class="good_img"><img src="/' + list[i].picture_info.pic_cover_small + '"</td>'
+                            text += '<td>' + list[i].goods_name + '</td>'
+                            text += '<td>￥' + list[i].promotion_price + '</td>'
+                            text += '<td>' + list[i].sales + '</td>'
+                            text += '<td>' + list[i].stock + '</td>'
+                            text += '<td><div  class="layui-btn check" data-title="' + list[i].goods_name + '" data-id="' + list[i].goods_id + '">选择</div></td>'
+                            text += '</tr>';
+                            html += text;
+                        }
+                    }else if(type=='article'){
+                        for(var i in list) {
+                            var text = '<tr>';
+                            text += '<td>' + list[i].short_title + '</td>'
+                            text += '<td>' + list[i].click + '/' + list[i].comment_count + '</td>'
+                            text += '<td>' + RiQi(list[i].public_time) + '</td>'
+                            if (list[i].status == 1) {
+                                text += '<td>未发布</td>'
+                            } else if (list[i].status == 2) {
+                                text += '<td>已发布</td>'
+                            }
+                            text += '<td><div  class="layui-btn check" data-title="' + list[i].short_title + '" data-id="' + list[i].article_id + '">选择</div></td>'
+                            text += '</tr>';
+                            html += text;
+                        }
+                    }else if(type=='category'){
+                        for(var i in list){
+                            var text='<tr>';
+                            text+='<td>'+list[i].category_name+'</td>'
+                            let btnlist='';
+                            for(var j in list[i].child_list){
+                                btnlist+='<div class="layui-btn check-category" data-title="'+list[i].child_list[j].category_name+'" data-id="'+list[i].child_list[j].category_id+'" >'+list[i].child_list[j].category_name+'</div>';
+                                for(var k in list[i].child_list[j].child_list){
+                                    btnlist+='<div class="layui-btn check-category" data-title="'+list[i].child_list[j].child_list[k].category_name+'" data-id="'+list[i].child_list[j].child_list[k].category_id+'" >'+list[i].child_list[j].child_list[k].category_name+'</div>';
+                                }
+                            }
+                            text+='<td>'+btnlist+'</td>'
+                            text+='<td><div  class="layui-btn check" data-title="'+list[i].category_name+'" data-id="'+list[i].category_id+'">选择</div></td>'
+                            text+='</tr>';
+                            html+=text;
+                        }
+                    }else if(type=='discount'){
+                        for(var i in list){
+                            var text='<tr>';
+                            text+='<td>'+list[i].discount_name+'</td>'
+                            text+='<td>'+RiQi(list[i].start_time)+'至'+RiQi(list[i].end_time)+'</td>'
+                            text+='<td><div  class="layui-btn check" data-title="'+list[i].discount_name+'" data-id="'+list[i].discount_id+'">选择</div></td>'
+                            text+='</tr>';
+                            html+=text;
+                        }
+                    }
+
+
+                    $('#list').html(html);
+                    if(res.data.total_count){
+                        laypage.render({
+                            elem: 'page' //注意，这里的 test1 是 ID，不用加 # 号
+                            , count: res.data.total_count //数据总数，从服务端得到
+                            , jump: function (obj, first) {
+                                //首次不执行
+                                if (!first) {
+                                    getList(obj.curr, search_text);
+                                    //do something
+                                }
+                            }
+                        });
+                    }else{
+                        laypage.render({
+                            elem: 'page' //注意，这里的 test1 是 ID，不用加 # 号
+                            , count: res.data.length //数据总数，从服务端得到
+                            , jump: function (obj, first) {
+                                //首次不执行
+                                if (!first) {
+                                    getList(obj.curr, search_text);
+                                    //do something
+                                }
+                            }
+                        });
+                    }
+
+                } else {
+                    layer.msg('没有更多了');
+                }
+            })
+        }
+
+        $('#list').on('click', '.check', function () {
+            var index = $('#index').val();
+            if (index < 0) {
+                parent.app.newInfo.url =urllist[type].link + $(this).data('id');
+                parent.app.newInfo.data_id = $(this).data('id');
+                parent.app.newInfo.title = $(this).data('title');
+                parent.app.newInfo.type = type;
+            } else {
+                var item = parent.app.list[index];
+                item.url = urllist[type].link + $(this).data('id');
+                item.data_id = $(this).data('id');
+                item.title = $(this).data('title');
+                item.type = type;
+                parent.app.list[index] = item;
+            }
+
+            parent.layer.closeAll();
+        })
+        $('.search').click(function () {
+            getList(1, $('input[name="search_text"]').val());
+        })
+        function RiQi(sj)
+        {
+            var now = new Date(sj*1000);
+            var   year=now.getFullYear();
+            var   month=now.getMonth()+1;
+            var   date=now.getDate();
+            var   hour=now.getHours();
+            var   minute=now.getMinutes();
+            var   second=now.getSeconds();
+            return   year+"-"+month+"-"+date+"   "+hour+":"+minute+":"+second;
+
+        }
+
+        // layer.msg('hello');
+    });
+
+</script>
+</html>

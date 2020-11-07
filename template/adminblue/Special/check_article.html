@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css">
+<script src="__STATIC__/layui/layui.js"></script>
+<style>
+    img{
+        width: 40px;
+        height: 40px;
+        background: #eee;
+    }
+    #page{
+        text-align: center;
+    }
+</style>
+<body>
+<input type="hidden" id="index" value="{$index}">
+<form class="layui-form" action="" style="padding-top:20px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">搜索关键词</label>
+        <div class="layui-input-inline">
+            <input type="text" name="search_text" required  placeholder="请输入关键词" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-btn search" >搜索</div>
+    </div>
+</form>
+<table class="layui-table">
+
+    <thead>
+    <tr>
+        <th>标题</th>
+        <th>点击量/评论量</th>
+        <th>发布时间</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
+<div id="page"></div>
+</body>
+<script>
+    layui.use(['layer','jquery','laypage'], function(){
+        var layer = layui.layer;
+        var $=layui.jquery;
+        var laypage = layui.laypage;
+
+        getList();
+
+        function getList(page=1,search_text=''){
+            $.post('/admin/cms/articlelist', {page_index:page,search_text:search_text}, function (res) {
+                if (res.data.length > 0) {
+                    var list=res.data;
+                    var html='';
+                    for(var i in list){
+                        var text='<tr>';
+                        text+='<td>'+list[i].short_title+'</td>'
+                        text+='<td>'+list[i].click+'/'+list[i].comment_count+'</td>'
+                        text+='<td>'+RiQi(list[i].public_time)+'</td>'
+                        if(list[i].status==1){
+                            text+='<td>未发布</td>'
+                        }else  if(list[i].status==2){
+                            text+='<td>已发布</td>'
+                        }
+                        text+='<td><div  class="layui-btn check-goods" data-title="'+list[i].short_title+'" data-id="'+list[i].article_id+'">选择</div></td>'
+                        text+='</tr>';
+                        html+=text;
+                    }
+                    $('#list').html(html);
+                    laypage.render({
+                        elem: 'page' //注意，这里的 test1 是 ID，不用加 # 号
+                        ,count: res.data.length //数据总数，从服务端得到
+                        ,jump: function(obj, first){
+                            //首次不执行
+                            if(!first){
+                                getList(obj.curr,search_text);
+                                //do something
+                            }
+                        }
+                    });
+                } else {
+                    layer.msg('没有更多了');
+                }
+            })
+        }
+        $('#list').on('click','.check-goods',function(){
+
+            var index=$('#index').val();
+            console.log(index);
+            if(index<0){
+                parent.app.newInfo.url='/article?id='+$(this).data('id');
+                parent.app.newInfo.data_id=$(this).data('id');
+                parent.app.newInfo.title=$(this).data('title');
+                parent.app.newInfo.type='article';
+            }else{
+                var item=parent.app.list[index];
+                item.url='/article?id='+$(this).data('id');
+                item.data_id=$(this).data('id');
+                item.title=$(this).data('title');
+                item.type='article';
+                parent.app.list[index]=item;
+            }
+            parent.layer.closeAll();
+        })
+        $('.search').click(function(){
+            getList(1,$('input[name="search_text"]').val());
+        })
+        function RiQi(sj)
+        {
+            var now = new Date(sj*1000);
+            var   year=now.getFullYear();
+            var   month=now.getMonth()+1;
+            var   date=now.getDate();
+            var   hour=now.getHours();
+            var   minute=now.getMinutes();
+            var   second=now.getSeconds();
+            return   year+"-"+month+"-"+date+"   "+hour+":"+minute+":"+second;
+
+        }
+
+        // layer.msg('hello');
+    });
+
+</script>
+</html>

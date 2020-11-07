@@ -1,0 +1,72 @@
+{extend name="adminblue/base" /}
+{block name="main"}
+<div class="set-style">
+    <dl>
+        <dt>账户名：</dt>
+        <dd><input id="bank_user" type="text" value="{$config['value']['bank_user']}" class="input-common" /></dd>
+    </dl>
+    <dl><dt>账号：</dt>
+        <dd><input id="bank_number" type="text" value="{$config['value']['bank_number']}" class="input-common" /></dd>
+    </dl>
+    <dl>
+        <dt>开户行：</dt>
+        <dd><input id="bank" type="text" value="{$config['value']['bank']}" class="input-common" /></dd>
+    </dl>
+    <dl>
+        <dt>是否启用支付：</dt>
+        <dd>
+            <p>
+                <input id="is_use" type="checkbox" class="checkbox" {if condition="$config.is_use==1"} checked="checked"{/if}/>
+            </p>
+        </dd>
+    </dl>
+
+
+
+
+    <dl>
+        <dt></dt>
+        <dd><button class="btn-common btn-big" onclick="setConfigAjax()">提交</button></dd>
+    </dl>
+</div>
+<script>
+    function setConfigAjax(){
+        var bank_user = $("#bank_user").val();
+        var bank_number = $("#bank_number").val();
+        var bank = $("#bank").val();
+        var is_use = 0;
+        if($("#is_use").is(":checked")){
+            is_use = 1;
+        }
+
+        var originalRoadRefund = new Object();
+        originalRoadRefund.is_use = $("#refund_is_use").is(":checked") ? 1 : 0;
+
+        var originalRoadTransfer = new Object();
+        originalRoadTransfer.is_use = $("#transfer_is_use").is(":checked") ? 1 : 0;
+
+        $.ajax({
+            type:"post",
+            url:"{:__URL('ADMIN_MAIN/config/payOFFLINEConfig')}",
+            data:{
+                'bank_user':bank_user,
+                'bank_number':bank_number,
+                'bank':bank,
+                'is_use' : is_use,
+                'type' : 'OFFLINE',
+
+                'value' : JSON.stringify(originalRoadRefund),
+                'transferValue' : JSON.stringify(originalRoadTransfer)
+            },
+            success:function (data) {
+                if (data["code"] > 0) {
+                    showMessage('success', data["message"]);
+                    location.href=__URL("ADMIN_MAIN/config/paymentconfig");
+                }else{
+                    showMessage('error', data["message"]);
+                }
+            }
+        });
+    }
+</script>
+{/block}

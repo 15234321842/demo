@@ -1,0 +1,428 @@
+{extend name="adminblue/base" /}
+{block name="resources"/}
+<style>
+    .pointer {
+        cursor: pointer;
+    }
+    .pointer.checked{
+        border:2px solid #ff4444;
+    }
+
+    .title {
+        text-align: center;
+    }
+
+    .display {
+        display: flex;
+    }
+
+    .flex-box {
+        justify-content: space-between;
+    }
+
+    select {
+        width: 135px;
+    }
+
+    .left {
+        width: 375px;
+        height: 667px;
+        background: #eee;
+        border: 1px solid #aaa;
+        overflow-y: auto;
+        overflow-x: hidden;
+        margin-right: 30px;
+    }
+
+    .banner {
+        width: 100%;
+        height: 200px;
+        background: #fff2c0;
+        text-align: center;
+        line-height: 200px;
+    }
+
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+        text-align: center;
+        padding: 10px;
+        background: #fff;
+    }
+
+    .menu-item {
+        width: 25%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .menu-item p {
+        width: 100%;
+    }
+
+    .menu-item .img {
+        width: 50px;
+        height: 50px;
+        background: #0ABEDE;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+    }
+
+    .adv {
+        padding: 10px;
+    }
+
+    .adv div {
+        width: 45%;
+        text-align: center;
+        background: #0BB20C;
+        height: 100px;
+        line-height: 100px;
+    }
+
+    .hot {
+        padding: 10px;
+        background: #e7c9ff;
+    }
+
+    .hot .list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .hot .list div {
+        height: 100px;
+        margin: 5px 0;
+        text-align: center;
+        width: 33%;
+        background: #0ABEDE;
+    }
+
+    .flash-sale {
+        padding: 10px;
+        background: #fff2c0;
+    }
+
+    .goods {
+        width: 33%;
+        text-align: center;
+    }
+
+    .goods .img {
+        width: 100%;
+        height: 100px;
+        background: #0eabcb;
+    }
+
+    .chuck {
+        padding: 10px;
+        background: #e0a36f;
+    }
+
+    .ad .img {
+        width: 100%;
+        height: 50px;
+        background: #c0bfc5;
+    }
+    .good_img{
+        width: 40px;
+        height: 40px;
+        background: #eee;
+    }
+</style>
+<style>
+    .right {
+        width: 500px;
+        background: #f4f4f4;
+        height: 667px;
+        overflow-y: auto;
+        margin-right: 20px;
+    }
+
+    .right .item {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-bottom: 1px solid #FF0000;
+    }
+
+    .right .item .img {
+        width: 120px;
+        height: 120px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        display: block;
+    }
+
+    .right .item .input-box {
+        width: 220px;
+    }
+
+    .right .item .play {
+    }
+
+    .right .item .play .btn {
+        margin-bottom: 10px;
+    }
+
+    .add-box {
+        width: 300px;
+        position: relative;
+    }
+
+
+    .add-box .img {
+        width: 120px !important;
+        height: 120px !important;
+        border: 1px solid #ccc;
+        display: block;
+    }
+
+    .checktitle {
+        background: #fff;
+        font-size: 21px;
+        padding: 10px 0;
+        font-weight: bold;
+    }
+    .table-class tr td{
+        text-align: center;
+    }
+   input[type="file"]{
+        width: 122px;
+        height: 122px;
+        position: absolute;
+        opacity: 0;
+    }
+    .add-box input[type="file"]{
+        top: 50px;
+    }
+</style>
+{/block}
+{block name="main"}
+<div id="content" class="display">
+    <div class="left">
+        <div class="banner pointer" @click="getdata('banner','轮播图')" :class="{checked:checkType=='banner'}">
+            轮播图
+        </div>
+        <div @click="getdata('menu','菜单')" class="menu pointer " :class="{checked:checkType=='menu'}">
+            <div class="menu-item">
+                <div class="img"></div>
+                <p>标题</p>
+            </div>
+            <div class="menu-item">
+                <div class="img"></div>
+                <p>标题</p>
+            </div>
+            <div class="menu-item">
+                <div class="img"></div>
+                <p>标题</p>
+            </div>
+            <div class="menu-item">
+                <div class="img"></div>
+                <p>标题</p>
+            </div>
+        </div>
+        <div @click="getdata('adv','广告')" class="adv display flex-box pointer" :class="{checked:checkType=='adv'}">
+            <div>左侧广告</div>
+            <div>右侧广告</div>
+        </div>
+        <div @click="getdata('hotsale','热销')" class="hot pointer" :class="{checked:checkType=='hotsale'}">
+            <p class="title">热销</p>
+            <div class="list">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+            </div>
+        </div>
+        <div @click="getdata('flashsale','限时抢购')" class="flash-sale pointer" :class="{checked:checkType=='flashsale'}">
+            <p class="title">限时快抢</p>
+            <div class="goods">
+                <div class="img"></div>
+                <p>商品</p>
+            </div>
+        </div>
+    </div>
+    <div class="right" v-if="list.length>0">
+        <p class="checktitle" v-if="checkTitle">当前选中:{{checkTitle}}</p>
+        <div class="item" v-for="(item,index) in list" :key="index">
+            <img :src="item.image" class="img" alt="">
+
+            <div class="input-box">
+                <input type="hidden" v-model="item.image">
+                <input type="hidden" v-model="item.id">
+                <input type="text" v-model="item.title" placeholder="标题,必填">
+                <input type="text" v-model="item.url" placeholder="链接,必填" disabled>
+                <input type="text" v-model="item.sort" placeholder="排序,选填">
+                <input type="text" v-model="item.extra" placeholder="附加信息,选填">
+            </div>
+            <input type="file" accept="image/*" @change="imgchange(this.event,index)" placeholder="选择图片">
+            <div class="play">
+                <div class="btn" @click="list[index].url=''">删除链接</div>
+                <div class="btn" @click="getList(index)">选择商品/分类/文章/限时抢购</div>
+                <div class="btn" @click="edit(index)">修改</div>
+                <div class="btn" @click="del(item.id)">删除</div>
+            </div>
+        </div>
+    </div>
+    <div class="add-box">
+        <p class="checktitle" v-if="checkTitle">当前选中:{{checkTitle}}</p>
+        <img :src="newInfo.image" class="img" alt="">
+        <div class="input-box">
+            <input type="file" accept="image/*" @change="imgchange(this.event)" placeholder="选择图片">
+            <input v-model="newInfo.image" type="hidden" placeholder="上传图片,必填">
+            <input v-model="newInfo.title" type="text" placeholder="标题,必填">
+            <input v-model="newInfo.url" type="text"  placeholder="链接,必填"  disabled>
+            <input v-model="newInfo.sort" type="text" placeholder="排序,选填">
+            <input v-model="newInfo.extra" type="text" placeholder="附加信息,选填">
+        </div>
+        <div class="play">
+            <div class="btn" @click="newInfo.url=''">删除链接</div>
+            <div class="btn" @click="getList(-1)">选择商品/分类/文章/限时抢购</div>
+            <div class="btn" @click="addinfo">添加</div>
+        </div>
+    </div>
+</div>
+<!--<link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css">-->
+<!--<script src="__STATIC__/layui/layui.all.js"></script>-->
+<script src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+    var template_id = {$id};
+    var app = new Vue({
+        el: '#content',
+        data: {
+            newInfo: {
+                title: '',
+                url: '',
+                sort: '',
+                extra: '',
+                image: '',
+                data_id:'',
+                type:''
+            },
+
+            checkType: '',
+            checkTitle: '',
+            id: '',
+            list: [],
+            get_list: [],
+            get_page: 1,
+            get_page_total: 1
+        },
+        methods: {
+            check_good(goods_id){
+                layer.closeAll();
+                this.newInfo.url='/goods?id='+goods_id;
+            },
+            getList(index='') {
+                //var url = this.url[this.url_check].url;
+                url='/admin/special/check';
+                if(index!==''){
+                    url=url+'?index='+index;
+                }else{
+                    url=url+'?index=-1';
+                }
+                layer.open({
+                    type: 2,
+                    title: '选择',
+                    content:url,
+                    area: ['960px', '800px']
+                });
+            },
+
+            imgchange(file, index) {
+                if (file) {
+                    this.uploadImg(file.srcElement.files[0], index);
+                }
+
+            },
+            del(id) {
+                var that = this;
+                var index = layer.load();
+                $.post('/admin/special/delParam', {id: id}, function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                    that.getdata(that.checkType, that.checkTitle);
+                });
+            },
+            edit(i) {
+                var that = this;
+                var index = layer.load();
+                $.post('/admin/special/addInfo', this.list[i], function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                });
+            },
+            getdata(type, title) {
+                this.checkTitle = title;
+                this.checkType = type;
+                var that = this;
+                var index = layer.load();
+                $.post('/admin/special/getData', {id: template_id, type: type}, function (res) {
+                    layer.close(index);
+                    if (res.code == 1) {
+                        that.list = res.data.list;
+                        that.id = res.data.id;
+                    } else {
+                        layer.msg(res.msg);
+                    }
+
+                });
+            },
+            addinfo() {
+                var that = this;
+                this.newInfo.vid = this.id;
+                var index = layer.load();
+                $.post('/admin/special/addInfo', this.newInfo, function (res) {
+                    layer.close(index);
+                    layer.msg(res.msg);
+                    if (res.code == 1) {
+                        that.getdata(that.checkType, that.checkTitle);
+                    }
+
+                });
+            },
+            uploadImg(file, index) {
+                var i = layer.load();
+                var that = this;
+                var data = new FormData();
+                data.append("file_path", "upload/goods/");
+                data.append("file_upload", file);
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "/appapi/Uploade/uploadFile", true);
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4) {
+                        try {
+                            response = JSON.parse(xhr.responseText);
+                        } catch (err) {
+                            response = xhr.responseText;
+                        }
+                        layer.close(i);
+                        if (response.code == 1) {
+                            if (isNaN(index)) {
+                                that.newInfo.image = '/' + response.data;
+                            } else {
+                                that.list[index].image = '/' + response.data;
+                            }
+                            //that.newInfo.img = response.data;
+                        } else {
+                            showMessage('error', response.msg);
+                        }
+                    }
+                };
+
+                xhr.send(data);
+            }
+        }
+    });
+</script>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+{/block}

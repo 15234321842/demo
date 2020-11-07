@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="screen-orientation" content="portrait" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="full-screen" content="yes">
+  <meta name="x5-fullscreen" content="true">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.css">
+  <script defer src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+  <title>商城</title>
+<link href="/app/static/css/app.css" rel="stylesheet"></head>
+<script>
+  window.baseUrl='http://www.fenxiao.com/index.php?s=/appapi/';
+  window.imgBaseUrl='http://www.fenxiao.com/';
+</script>
+<body>
+  <div id="app">
+    <router-view></router-view>
+  </div>
+<script type="text/javascript" src="/app/static/js/manifest.js"></script><script type="text/javascript" src="/app/static/js/vendor.js"></script><script type="text/javascript" src="/app/static/js/app.js"></script></body>
+<script>
+  const appname = '商城';
+  function onBackKeyDown() {
+    if (window.location.href.indexOf("#/index") < 0) {
+
+      window.history.back()
+    } else {
+      plus.ui.toast("再次点击退出应用", 1500)
+      plus.key.removeEventListener("backbutton", onBackKeyDown, false); //注销返回键
+      //1秒后重新注册
+      var intervalID = window.setInterval(
+        function () {
+          window.clearInterval(intervalID);
+          plus.key.addEventListener("backbutton", onBackKeyDown, false); //返回键
+        },
+        1500
+      );
+    }
+
+  }
+  var wxChannel = '';
+  var aliChannel = '';
+  var auths = {};
+  function plusReady() {
+    localStorage.setItem('device_type', getDevice())
+    plus.key.addEventListener('backbutton', onBackKeyDown, false)
+    plus.payment.getChannels(
+      function (channels) {
+        for (var i in channels) {
+          if (channels[i].id == 'wxpay') {
+            wxChannel = channels[i]
+          } else {
+            aliChannel = channels[i]
+          }
+        }
+        //console.log('plusReady payment' + channels.length);
+      },
+      function (e) {
+        //console.log("获取支付通道列表失败：" + e.message);
+      }
+    )
+    plus.oauth.getServices(function (services) {
+      auths = {};
+      for (var i in services) {
+        var t = services[i];
+        auths[t.id] = t;
+      }
+    }, function (e) {
+      //alert("获取第三方登陆列表失败：" + e.message + " - " + e.code);
+    });
+
+  }
+  if (location.href.indexOf("http") < 0) {
+    if (window.plus) {
+      plusReady();
+    } else {
+      document.addEventListener("plusready", plusReady, false);
+    }
+  }
+
+  function getDevice() {
+    if (typeof plus != 'undefined') {
+      return plus.os.name.toLowerCase()
+    } else {
+      return 'web'
+    }
+  }
+  localStorage.setItem('device_type', getDevice())
+</script>
+
+</html>
