@@ -1001,6 +1001,11 @@ abstract class Builder
             $this->selectSql);
     }
 
+
+    public function getHashList($key,$val = []){
+        $list = $db->select();
+        dump($list);
+    }
     /**
      * 生成Insert SQL
      * @access public

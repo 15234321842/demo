@@ -164,6 +164,7 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
      */
     public function __construct($data = [])
     {
+        $this->_initialize();
         if (is_object($data)) {
             $this->data = get_object_vars($data);
         } else {
@@ -222,6 +223,8 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
         $this->initialize();
     }
 
+    // 回调方法 初始化模型
+    protected function _initialize() {}
     /**
      * 获取当前模型名称
      * @access public
@@ -704,6 +707,10 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
         }
     }
 
+    public function getHashList($key = '',$val = []){
+        $list = $db->select();
+        dump($list);
+    }
     /**
      * 字段值(延迟)增长
      * @access public

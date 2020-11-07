@@ -189,7 +189,6 @@ class Db
 
         return $dsn;
     }
-
     public static function __callStatic($method, $args)
     {
         return call_user_func_array([static::connect(), $method], $args);
