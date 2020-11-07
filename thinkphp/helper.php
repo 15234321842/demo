@@ -457,7 +457,7 @@ if (!function_exists('lang')) {
     }
 }
 
-if (!function_exists('model')) {
+if (!function_exists('Model')) {
     /**
      * 实例化Model
      * @param string    $name Model名称
@@ -465,12 +465,110 @@ if (!function_exists('model')) {
      * @param bool      $appendSuffix 是否添加类名后缀
      * @return \think\Model
      */
-    function model($name = '', $layer = 'model', $appendSuffix = false)
+    function Model($name = '', $layer = 'model', $appendSuffix = false)
     {
         return app()->model($name, $layer, $appendSuffix);
     }
 }
+if (!function_exists('D')) {
+    /**
+     * 实例化Model
+     * @param string    $name Model名称
+     * @param string    $layer 业务层名称
+     * @param bool      $appendSuffix 是否添加类名后缀
+     * @return \think\Model
+     */
+    function D($name = '', $app = 'common',$layer = 'model', $appendSuffix = false)
+    {
+        return app()->model($name, $layer, $appendSuffix,$app);
+    }
+}
+if(!function_exists('U')){
 
+function U($url,$params=false,$redirect=false,$suffix=true) {
+
+    //普通模式
+    if(false==strpos($url,'/')){
+        $url    .='//';
+    }
+
+    //填充默认参数
+    $urls   =   explode('/',$url);
+    $app    =   isset($urls[0]) && !empty($urls[0]) ? $urls[0] : APP_NAME;
+    $mod    =   isset($urls[1]) && !empty($urls[1]) ? $urls[1] : 'Index';
+    $act    =   isset($urls[2]) && !empty($urls[2]) ? $urls[2] : 'index';
+
+    //个人主页处理
+    if( $app == 'public' && $mod =='Profile' ){
+        isset($params['uid']) && $params['uid'] = jiami($params['uid'],'profiles');
+        !isset($params['uid']) && $params['uid'] = jiami($GLOBALS['qm']['mid'],'profiles');
+    }
+    //组合默认路径
+    $site_url   =   SITE_URL.'/index.php?app='.$app.'&mod='.$mod.'&act='.$act;
+
+    //填充附加参数
+    if($params){
+        if(is_array($params)){
+            $params =   http_build_query($params);
+            $params =   urldecode($params);
+        }
+        $params     =   str_replace('&amp;','&',$params);
+        $site_url   .=  '&'.$params;
+    }
+
+    //开启路由和Rewrite
+    if(C('URL_ROUTER_ON')){
+
+        //载入路由
+        $router_ruler   =   C('router');
+        $router_key     =   $app.'/'.ucfirst($mod).'/'.$act;
+
+        //路由命中
+        if(isset($router_ruler[$router_key])){
+            if(isset($router_ruler[$router_key])){
+                //填充路由参数
+                if(false==strpos($router_ruler[$router_key],'://')){
+                    $site_url   =   SITE_URL.'/'.$router_ruler[$router_key];
+                }else{
+                    $site_url   =   $router_ruler[$router_key];
+                }
+
+                $site_url   =   SITE_URL.'/'.$router_ruler[$router_key];
+            }
+            
+
+            //填充附加参数
+            if($params){
+                //解析替换URL中的参数
+                parse_str($params,$r);
+                foreach($r as $k=>$v){
+                    if(strpos($site_url,'['.$k.']')){
+                        $site_url   =   str_replace('['.$k.']',$v,$site_url);
+                    }else{
+                        $lr[$k] =   $v;
+                    }
+                }
+
+                //填充剩余参数
+                if( !empty($lr) && is_array($lr) && count($lr)>0){
+                    $site_url   .=  '?'.http_build_query($lr);
+                }
+
+            }
+        }
+
+
+
+    }
+
+    //输出地址或跳转
+    if($redirect){
+        redirect($site_url);
+    }else{
+        return $site_url;
+    }
+}
+}
 if (!function_exists('parse_name')) {
     /**
      * 字符串命名风格转换

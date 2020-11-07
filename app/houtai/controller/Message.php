@@ -9,23 +9,19 @@
  */
 
 namespace app\houtai\controller;
+use common\auth\LoadController;
 
-
-use common\logic\MessageLogic;
-use common\model\Result;
-use common\model\Message as ModelMessage;
-
-class Message extends Base{
+class Message extends LoadController{
     public function index(){
         $lastTime = time();
         $params = array();
         $params = $this->request->param();
 
-        $params['receive_uid'] = $this->getUserId();
+        $params['receive_uid'] = $this->my_uid;
         $params['is_del'] = 0;
         $params['last_time'] = $lastTime;
 
-        $logic = new MessageLogic();
+        $logic = D('MessageLogic','houtai');
         $list = $logic->paginate($params);
 
         $this->assign('list',$list);
@@ -37,12 +33,11 @@ class Message extends Base{
 
         $isReadList = config('is_read');
         $this->assign('isReadList',$isReadList);
-
         return $this->fetch();
     }
 
     public function scroll_loading(){
-        $result = new Result();
+        $result = Model('Result');
 
         $params = array();
         $params = $this->request->param();

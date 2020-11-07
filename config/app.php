@@ -15,11 +15,11 @@
 
 return [
     // 应用名称
-    'app_name'               => 'letu33',
+    'app_name'               => 'fushi',
     // 应用地址
     'app_host'               => '',
     // 应用调试模式
-    'app_debug'              => false,
+    'app_debug'              => true,
     // 应用Trace
     'app_trace'              => false,
     // 是否支持多模块
@@ -147,7 +147,7 @@ return [
 
     //验证码
     'captcha' => array(
-        'seKey'    => 'letu33.com',
+        'seKey'    => 'fushi.com',
         // 验证码图片宽度
         'length'   => 4,
         // 验证码字体大小(px)
@@ -157,14 +157,14 @@ return [
     ),
 
     //加解密函数-密钥
-    'crypt_key' => 'letu33.com',
+    'crypt_key' => 'fushi.com',
 
     // +----------------------------------------------------------------------
     // | 项目自定义配置
     // +----------------------------------------------------------------------
 
     //网站标题
-    'site_title' => '乐兔CRM',
+    'site_title' => '服饰商城',
     //性别
     'sex' => array(
         0 => '女',

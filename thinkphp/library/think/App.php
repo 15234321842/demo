@@ -669,7 +669,6 @@ class App extends Container
     public function create($name, $layer, $appendSuffix = false, $common = 'common')
     {
         $guid = $name . $layer;
-
         if ($this->__isset($guid)) {
             return $this->__get($guid);
         }

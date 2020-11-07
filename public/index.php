@@ -14,6 +14,8 @@ namespace think;
 
 // 定义应用目录
 define('APP_PATH', __DIR__ . '/../app/');
+//站点根路径
+define('SITE_PATH', getcwd());
 // 加载基础文件
 require __DIR__ . '/../thinkphp/base.php';
 // 加载公共函数文件

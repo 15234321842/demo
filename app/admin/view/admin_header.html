@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+    /**
+     * 全局变量
+     */
+    var SITE_URL = '<php> echo SITE_URL;</php>';
+    var THEME_URL = 'SITE_PATH';
+    var MID = '<php> echo $my_uid;</php>';
+    var UID = '<php> echo $this_uid;</php>';
+    // JS语言变量
+    var LANG = new Array();
+    var $config = {};
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="/favicon.ico" rel="shortcut icon">
+    <link href="/favicon.ico" rel="stylesheet">
+    <link href="/static/admin/css/admin/admin.css" rel="stylesheet" type="text/css">
+    <link href="/static/admin/css/js/fineuploader/fineuploader-3.3.1.css" rel="stylesheet" type="text/css" />
+    <title> {$_title|default='后台管理'}</title>
+    <script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/admin/js/core.js"></script>
+    <script src="/static/admin/js/fineuploader/fineuploader-3.3.1.js"></script>
+    <script src="/static/admin/js/module.js"></script>
+    <script src="/static/admin/js/common.js"></script>
+    <script src="/static/admin/js/module.common.js"></script>
+    <script type="text/javascript" src="/static/admin/admin/admin.js"></script>
+    <script type="text/javascript" src="/static/admin/js/ui.core.js"></script>
+    <script type="text/javascript" src="/static/admin/js/ui.draggable.js"></script>
+    <script type="text/javascript" src="/static/admin/js/ui.sortable.js"></script>
+    <script src="/static/admin/js/placeholder.js"></script>
+    <script src="/static/admin/js/module.form.js"></script>
+
+    <script src="/static/admin/js/placeholder.js"></script>
+    <script src="/static/admin/js/bootstrap.min.js"></script>
+    <script src="/static/admin/js/xss/dist/xss.min.js"></script>
+</head>
+
+<body>
+    <div class="qm-left">
+        <div class="logo">
+            <img src="SITE_PATH/image/logo-admin@2x.png?v=20190218">
+        </div>
+        <div class="tree-menu">
+            <fieldset>
+                <legend>功能</legend>
+            </fieldset>
+            
+            <ul class="second-menu" model-node="js_treemenu">
+                <li>
+                    <a href="javascript:;"><span class="figure"><i class="icon-home"></i></span><span class="text">首页</span></a>
+                </li>
+                <li>
+                    <a href="javascript:;"><span class="figure"><i class="icon-users"></i></span><span class="text">用户管理</span><span class="handle"><i class="icon-arrow-right"></i></span></a>
+                    <ul class="third-menu">
+                        <li><a href="javascript:;" >用户列表</a></li>
+                        <li><a href="javascript:;" >部门管理</a></li>
+                        <li><a href="javascript:;" >用户组</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;"><span class="figure"><i class="icon-company"></i></span><span class="text">分类管理</span></a>
+                </li>
+                <li>
+                    <a href="javascript:;"><span class="figure"><i class="icon-goup"></i></span><span class="text">业务领域</span></a>
+                </li>
+                <li>
+                    <a href="javascript:;"><span class="figure"><i class="icon-block"></i></span><span class="text">应用管理</span><span class="handle"><i class="icon-arrow-right"></i></span></a>
+                    <ul class="third-menu">
+                        <li><a href="javascript:;" >求助</a></li>
+                        <li><a href="javascript:;" >积分商城</a></li>
+                    </ul>
+                </li>
+            
+                <li>
+                    <a href="javascript:;"><span class="figure"><i class="icon-news"></i></span><span class="text">内容管理</span><span class="handle"><i class="icon-arrow-right"></i></span></a>
+                    <ul class="third-menu">
+                        <li><a href="javascript:;">视频</a></li>
+                        <li><a href="javascript:;">评论</a></li>
+                        <li><a href="javascript:;">附件</a></li>
+                        <li><a href="javascript:;">标签</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;"><span class="figure"><i class="icon-pic"></i></span><span class="text">广告管理</span></a>
+                </li>
+            </ul>
+            <div class="item-system">
+                <fieldset>
+                    <legend>系统</legend>
+                </fieldset>
+                <ul class="second-menu" model-node="js_treemenu">
+                    <li >
+                        <a href="#"><span class="figure"><i class="icon-setup"></i></span><span class="text">系统配置</span><span class="handle"><i class="icon-arrow-right"></i></span></a>
+                        <ul class="third-menu">
+                            <li><a href="javascript:;">站点配置</a></li>
+                            <li><a href="javascript:;">导航配置</a></li>
+                            <li><a href="javascript:;">附件配置</a></li>
+                            <li><a href="javascript:;">过滤配置</a></li>
+                            <li><a href="javascript:;">积分配置</a></li>
+                            <li><a href="javascript:;">消息配置</a></li>
+                            <li><a href="javascript:;">登录须知</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><span class="figure"><i class="icon-tool"></i></span><span class="text">系统工具</span><span class="handle"><i class="icon-arrow-right"></i></span></a>
+                        <ul class="third-menu">
+                            <li><a href="javascript:;">缓存清理</a></li>
+                            <li><a href="javascript:;">清除全站缓存</a></li>
+                            <li><a href="javascript:;">计划任务</a></li>
+                            <li><a href="javascript:;">系统消息</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><span class="figure"><i class="icon-cl"></i></span><span class="text">日志</span></a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="second-menu exit">
+                <li>
+                    <a href="javascript:;" class="left">
+                        <span class="figure"><i class="icon-collapse-left"></i></span><span class="text">返回前台</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+<script type="text/javascript">
+if(_app_name=='admin'){
+    $(".qm-left .tree-menu a").each(function(){
+        if($(this).attr('href')==_url){
+            $(this).addClass('current');
+            if( $(this).parent().parent().parent()[0].tagName.toLowerCase() == 'li' ){
+                $(this).parent().parent().parent().addClass('open');
+                _match = true;
+            }
+        }
+    })
+    
+}else{
+    $(".qm-left .tree-menu a").each(function(){
+        if($(this).attr('href').indexOf('app='+_app_name) !=-1 && $(this).attr('href').indexOf('mod=Admin')){
+            $(this).addClass('current');
+            $(this).parent().parent().parent().addClass('open');
+        }
+
+    })
+}
+
+</script>
