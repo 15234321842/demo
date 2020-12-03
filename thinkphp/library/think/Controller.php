@@ -158,6 +158,7 @@ class Controller
      */
     protected function fetch($template = '', $vars = [], $config = [])
     {
+        
         return $this->view->fetch($template, $vars, $config);
     }
 
