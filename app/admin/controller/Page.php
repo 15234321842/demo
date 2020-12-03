@@ -69,9 +69,4 @@ class Page extends LoadController{
         return $this->fetch();
     }
     
-    public function error(){
-        return $this->fetch();
-    }
-    
-
 }
