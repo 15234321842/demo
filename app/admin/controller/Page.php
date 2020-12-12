@@ -3,6 +3,9 @@ namespace app\admin\controller;
 use common\auth\LoadController;
 
 class Page extends LoadController{
+    public function _initialize(){
+        
+    }
     public function welcome1(){
         return $this->fetch();
     }
