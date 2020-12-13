@@ -12,6 +12,10 @@
 // [ 应用入口文件 ]
 namespace think;
 
+
+
+
+
 // 定义应用目录
 define('APP_PATH', __DIR__ . '/../app/');
 //站点根路径
